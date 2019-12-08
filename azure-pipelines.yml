@@ -41,5 +41,5 @@ steps:
     
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(Pipeline.Workspace)'
+    targetPath: '$(Pipeline.Workspace)\s\TopDownShooter\TopDownShooter\bin\Release\netcoreapp3.0\publish.zip'
     publishLocation: 'pipeline'
