@@ -2,6 +2,6 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/TopDownShooter/.vs/
-/TopDownShooter/bin/
-/TopDownShooter/obj
+**/.vs/
+**/bin/
+**/obj
