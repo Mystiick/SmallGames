@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <ApplicationIcon />
     <StartupObject></StartupObject>
@@ -14,6 +14,8 @@
     <RepositoryUrl></RepositoryUrl>
     <PackageTags></PackageTags>
     <RepositoryType></RepositoryType>
+    <!--Required for Sonar-->
+    <ProjectGuid>{A46630E9-3D53-41FB-898B-5C6D3D736AC2}</ProjectGuid>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -25,10 +27,37 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Content\bin\**" />
+    <Compile Remove="Content\obj\**" />
+    <EmbeddedResource Remove="Content\bin\**" />
+    <EmbeddedResource Remove="Content\obj\**" />
+    <MonoGameContentReference Remove="Content\bin\**" />
+    <MonoGameContentReference Remove="Content\obj\**" />
+    <None Remove="Content\bin\**" />
+    <None Remove="Content\obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Content\MonoGame.Extended.Content.Pipeline.dll" />
+    <None Remove="Content\MonoGame.Extended.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MonoGame.Content.Builder" Version="3.7.0.9" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.8.0.1" />
+    <PackageReference Include="MonoGame.Extended" Version="3.7.0" />
+    <PackageReference Include="MonoGame.Extended.Gui" Version="3.7.0" />
+    <PackageReference Include="MonoGame.Extended.Tiled" Version="3.7.0" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.8.0.13" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.7.1.189" />
-    <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="UI\MainMenu.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="UI\Score.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
