@@ -32,6 +32,7 @@ namespace TopDownShooter.Managers
         {
             int i = 0;
             AddEngine(new TimeToLiveEngine(), i++);
+            AddEngine(new HealthEngine(), i++);
             AddEngine(new TransformEngine(), i++);
             AddEngine(new PhysicsEngine(), i++);
             AddEngine(new IntelligenceEngine(), i++);
