@@ -76,6 +76,14 @@ namespace TopDownShooter.ECS.Components.Templates
             if (bullet?.Owner?.ID != other.ID && other.Name != "Bullet")
             {
                 me.Expired = true;
+
+                var health = other.GetComponent<Health>();
+
+                if (health != null)
+                {
+                    health.CurrentHealth -= bullet.Damage;
+                    Console.WriteLine($"{other.ID}: {health.CurrentHealth}");
+                }
             }
         };
         

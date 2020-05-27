@@ -12,6 +12,7 @@ using TopDownShooter.ECS;
 using TopDownShooter.ECS.Components;
 using MonoGame.Extended;
 using TopDownShooter.ECS.Components.Templates;
+using MonoGame.Extended.TextureAtlases;
 
 namespace TopDownShooter.Stages
 {
@@ -254,12 +255,17 @@ namespace TopDownShooter.Stages
             {
                 foreach (TiledMapObject obj in enemySpawns)
                 {
+                    TextureRegion2D sprite = ContentCache.GetClippedAsset(AssetName.Character_Orange_Pistol);
+                    Vector2 size = new Vector2(sprite.Width, sprite.Height);
+                    EnemyType et = Enum.Parse<EnemyType>(obj.Properties.First(x => x.Key == "enemy_type").Value);
+
                     Entity e = new Entity();
                     e.AddComponents(new Component[] {
                         new Transform() { Position = obj.Position },
                         new Intelligence() { EnemyType = Enum.Parse<EnemyType>(obj.Properties.First(x => x.Key == "enemy_type").Value) },
-                        new Health(),
-                        new Sprite() { Texture = ContentCache.GetClippedAsset(AssetName.Character_Orange_Pistol) }
+                        new Health() { MaxHealth = 50 },
+                        new Sprite() { Texture = sprite },
+                        new BoxCollider() { BoundingBox = new Rectangle((-size / 2).ToPoint(), size.ToPoint()) }
                     });
 
                     EntityComponentManager.AddEntity(e);
