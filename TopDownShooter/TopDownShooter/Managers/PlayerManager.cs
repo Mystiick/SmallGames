@@ -73,7 +73,7 @@ namespace TopDownShooter.ECS.Managers
         {
             var velocity = PlayerEntity.GetComponent<Velocity>();
 
-            velocity.Speed = (float)gameTime.ElapsedGameTime.TotalSeconds * 10f;
+            velocity.Speed = 150f;
             velocity.Direction = Vector2.Zero;
 
             if (InputManager.IsKeyDown(KeyBinding.MoveUp))

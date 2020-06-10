@@ -278,8 +278,10 @@ namespace TopDownShooter.Stages
                         new Intelligence() { EnemyType = Enum.Parse<EnemyType>(obj.Properties.First(x => x.Key == "enemy_type").Value) },
                         new Health() { MaxHealth = 50 },
                         new Sprite() { Texture = sprite },
-                        new BoxCollider() { BoundingBox = new Rectangle((-size / 2).ToPoint(), size.ToPoint()) }
+                        new BoxCollider() { BoundingBox = new Rectangle((-size / 2).ToPoint(), size.ToPoint()) },
+                        new Velocity() { }
                     });
+                    e.Name = $"Enemy-{et}";
 
                     EntityComponentManager.AddEntity(e);
                 }

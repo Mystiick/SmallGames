@@ -53,7 +53,8 @@ namespace TopDownShooter.ECS.Engines
                     {
                         DistanceToPlayer = -1,
                         Visited = false,
-                        CanTravelThrough = true
+                        CanTravelThrough = true,
+                        Location = new Point(x, y) //Location = new Point(x * output.TileWidth, y * output.TileHeight)
                     };
                 }
             }
@@ -107,8 +108,8 @@ namespace TopDownShooter.ECS.Engines
         private void SetWeights(TileGrid grid, Entity target)
         {
             var tileQueue = new Queue<Tile>();
-            var startPosition = ConvertToTilePosition(grid, target.Transform);
-            var startingTile = grid.Tiles[startPosition.X, startPosition.Y];
+            Point startPosition = ConvertToTilePosition(grid, target.Transform);
+            Tile startingTile = grid.Tiles[startPosition.X, startPosition.Y];
             
             // Keep track of where the player was last, so we don't need to do this every frame
             _lastCalculatedPlayerPosition = startPosition;

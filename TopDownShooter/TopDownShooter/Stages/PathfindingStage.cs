@@ -111,8 +111,7 @@ namespace TopDownShooter.Stages
             // Add entities for collidable tiles
             CreateColliders();
 
-            //TODO: Add new entities to ECS with the Tile component
-            //TODO: Add single entity to ECS with TileGrid component
+            SpawnEnemies();
         }
 
         private void SetupPlayerSpawn()
@@ -241,5 +240,35 @@ namespace TopDownShooter.Stages
             }
         }
         #endregion
+
+
+        private void SpawnEnemies()
+        {
+            TiledMapObject[] enemySpawns = _map.ObjectLayers.FirstOrDefault(x => x.Name == Constants.TileMap.Layers.Enemies)?.Objects;
+
+            if (enemySpawns != null)
+            {
+                foreach (TiledMapObject obj in enemySpawns)
+                {
+                    TextureRegion2D sprite = ContentCache.GetClippedAsset(AssetName.Character_Orange_Pistol);
+                    Vector2 size = new Vector2(sprite.Width, sprite.Height);
+                    EnemyType et = Enum.Parse<EnemyType>(obj.Properties.First(x => x.Key == "enemy_type").Value);
+
+                    Entity e = new Entity();
+                    e.AddComponents(new Component[] {
+                        new Transform() { Position = obj.Position },
+                        new Intelligence() { EnemyType = Enum.Parse<EnemyType>(obj.Properties.First(x => x.Key == "enemy_type").Value) },
+                        new Health() { MaxHealth = 50 },
+                        new Sprite() { Texture = sprite },
+                        new BoxCollider() { BoundingBox = new Rectangle((-size / 2).ToPoint(), size.ToPoint()) },
+                        new Velocity() { }
+                    });
+                    e.Name = $"Enemy-{et}";
+                    e.Transform.Position += new Vector2(e.Sprite.Origin.X + 2, -e.Sprite.Origin.Y);
+
+                    EntityComponentManager.AddEntity(e);
+                }
+            }
+        }
     }
 }

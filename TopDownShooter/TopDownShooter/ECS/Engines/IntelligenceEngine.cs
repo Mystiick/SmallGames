@@ -27,8 +27,16 @@ namespace TopDownShooter.ECS.Engines
         public override void Update(GameTime gameTime, List<Entity> allEntities)
         {
             base.Update(gameTime, allEntities);
-
+            
+            // TODO: Possible performance hit here
             Entity playerEntity = allEntities.FirstOrDefault(x => x.Name == Constants.Entities.Player);
+            Entity gridEntity = allEntities.FirstOrDefault(x => x.HasComponent<TileGrid>());
+            TileGrid grid = null;
+
+            if (gridEntity != null)
+            {
+                grid = gridEntity.GetComponent<TileGrid>();
+            }
 
             for (int i = 0; i < this.Entities.Count; i++)
             {
@@ -39,6 +47,7 @@ namespace TopDownShooter.ECS.Engines
                 {
                     intel.Implementation.PlayerEntity = playerEntity;
                     intel.Implementation.CurrentEntity = x;
+                    intel.Implementation.Grid = grid;
 
                     intel.Implementation.Update(gameTime, allEntities);
                 }

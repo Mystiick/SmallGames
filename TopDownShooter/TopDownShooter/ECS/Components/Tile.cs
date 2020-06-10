@@ -25,38 +25,33 @@ namespace TopDownShooter.ECS.Components
         {
             if (Debugger.ShowDebugInfo)
             {
-                Thread thread = new Thread(Printer);
-                thread.Start();
-            }
-        }
-
-        private void Printer()
-        {
-            Console.WriteLine("");
-
-            for (int y = 0; y <= Tiles.GetUpperBound(1); y++)
-            {
-                for (int x = 0; x <= Tiles.GetUpperBound(0); x++)
-                {
-                    var tile = Tiles[x, y];
-
-                    if (!tile.CanTravelThrough)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Red;
-                        Console.ForegroundColor = ConsoleColor.Red;
-                    }
-                    else if (tile.DistanceToPlayer == -1)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                    }
-
-                    Console.Write(tile.DebugString());
-                    Console.ResetColor();
-                }
-
                 Console.WriteLine("");
+
+                for (int y = 0; y <= Tiles.GetUpperBound(1); y++)
+                {
+                    for (int x = 0; x <= Tiles.GetUpperBound(0); x++)
+                    {
+                        var tile = Tiles[x, y];
+
+                        if (!tile.CanTravelThrough)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Red;
+                            Console.ForegroundColor = ConsoleColor.Red;
+                        }
+                        else if (tile.DistanceToPlayer == -1)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                        }
+
+                        Console.Write(tile.DebugString());
+                        Console.ResetColor();
+                    }
+
+                    Console.WriteLine("");
+                }
             }
         }
+
 #endif
 
     }
