@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -21,10 +22,9 @@ namespace TopDownShooter.ECS.Engines
             // Should only be one, but loop throug it anyway
             for (int i = 0; i < this.Entities.Count; i++)
             {
-                // TODO: Check allEntities if player has moved significantally (X number of units)
-                // If so, recalculate distance values
                 var grid = this.Entities[i].GetComponent<TileGrid>();
 
+                // If the player has moved to a different tile, reset the weights
                 if (_lastCalculatedPlayerPosition == Point.Zero || _lastCalculatedPlayerPosition != ConvertToTilePosition(grid, player.Transform))
                 {
                     SetWeights(grid, player);
@@ -68,23 +68,29 @@ namespace TopDownShooter.ECS.Engines
                     for (int x = 0; x < map.Height; x++)
                     {
                         var tile = output.Tiles[x, y];
+                        List<Tile> temp = new List<Tile>();
                         // Set neighbors
                         if (y > 0)
                         {
                             tile.North = output.Tiles[x, y - 1];
+                            temp.Add(tile.North);
                         }
                         if (y < output.Tiles.GetUpperBound(1))
                         {
                             tile.South = output.Tiles[x, y + 1];
+                            temp.Add(tile.South);
                         }
                         if (x > 0)
                         {
                             tile.West = output.Tiles[x - 1, y];
+                            temp.Add(tile.West);
                         }
                         if (x < output.Tiles.GetUpperBound(0))
                         {
                             tile.East = output.Tiles[x + 1, y];
+                            temp.Add(tile.East);
                         }
+                        tile.Neighbors = temp.ToArray();
 
                         // Set colliders
                         if (!collidableLayers[i].GetTile((ushort)x, (ushort)y).IsBlank)
@@ -100,43 +106,35 @@ namespace TopDownShooter.ECS.Engines
 
         private void SetWeights(TileGrid grid, Entity target)
         {
-            // First, get the starting tile
+            var tileQueue = new Queue<Tile>();
             var startPosition = ConvertToTilePosition(grid, target.Transform);
+            var startingTile = grid.Tiles[startPosition.X, startPosition.Y];
+            
+            // Keep track of where the player was last, so we don't need to do this every frame
             _lastCalculatedPlayerPosition = startPosition;
 
             grid.Reset();
 
-            var startingTile = grid.Tiles[startPosition.X, startPosition.Y];
-            var tileQueue = new Queue<Tile>();
-
-            ProcessTile(startingTile, tileQueue, -1);
+            startingTile.DistanceToPlayer = 0;
+            startingTile.Visited = true;
+            tileQueue.Enqueue(startingTile);
 
             while (tileQueue.Count > 0)
             {
-                Tile temp = tileQueue.Dequeue();
-                ProcessNeighbors(temp, tileQueue, temp.DistanceToPlayer);
-            }
+                Tile tile = tileQueue.Dequeue();
 
-#if DEBUG
-            grid.PrintDebugGrid();
-#endif
-        }
+                // Process any neighbors that have not been visited yet
+                for (int i = 0; i < tile.Neighbors.Length; i++)
+                {
+                    Tile neighbor = tile.Neighbors[i];
 
-        private void ProcessNeighbors(Tile currentTile, Queue<Tile> tiles, int distance)
-        {
-            ProcessTile(currentTile.North, tiles, distance);
-            ProcessTile(currentTile.South, tiles, distance);
-            ProcessTile(currentTile.East, tiles, distance);
-            ProcessTile(currentTile.West, tiles, distance);
-        }
-
-        private void ProcessTile(Tile currentTile, Queue<Tile> tiles, int distance)
-        {
-            if (currentTile != null && !currentTile.Visited && currentTile.CanTravelThrough)
-            {
-                currentTile.DistanceToPlayer = distance + 1;
-                currentTile.Visited = true;
-                tiles.Enqueue(currentTile);
+                    if (!neighbor.Visited && neighbor.CanTravelThrough)
+                    {
+                        neighbor.DistanceToPlayer = tile.DistanceToPlayer + 1;
+                        neighbor.Visited = true;
+                        tileQueue.Enqueue(neighbor);
+                    }
+                }
             }
         }
 

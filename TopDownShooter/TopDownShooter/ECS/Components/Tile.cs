@@ -72,6 +72,7 @@ namespace TopDownShooter.ECS.Components
         public Tile South;
         public Tile East;
         public Tile West;
+        public Tile[] Neighbors;
 
         private const int default_distance = -1;
 
