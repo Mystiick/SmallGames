@@ -1,1 +1,3 @@
 ﻿tilesheet_transparent.png -> Kenney Game Assets 2 version 20\2D assets\Topdown Shooter (pixel) (620 assets)\Tilesheet
+crosshairs_tilesheet_white.png -> Kenney Game Assets 3 version 21\2D assets\Crosshair Pack\Tilesheet
+pixel_style1.png -> Kenney Game Assets 3 version 21\2D assets\Emote Pack\Tilesheets

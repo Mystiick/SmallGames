@@ -11,6 +11,6 @@ namespace TopDownShooter.Intelligences
         Entity CurrentEntity { get; set; }
         Entity PlayerEntity { get; set; }
 
-        void Update(GameTime gameTime);
+        void Update(GameTime gameTime, List<Entity> allEntities);
     }
 }

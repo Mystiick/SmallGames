@@ -40,6 +40,9 @@ namespace TopDownShooter.UI
             var playButton = Screen.FindControl<Button>("btnPlay");
             playButton.Clicked += (sender, args) => _messageManager.SendMessage(EventType.UserInterface, Constants.MainMenu.PlayButtonAction, this, null);
 
+            var pathfinderButton = Screen.FindControl<Button>("btnPathfinder");
+            pathfinderButton.Clicked += (sender, args) => _messageManager.SendMessage(EventType.UserInterface, Constants.MainMenu.PathfinderButtonAction, this, null);
+
 #if DEBUG
             var spDebug = Screen.FindControl<StackPanel>("spDebug");
             spDebug.IsVisible = true;

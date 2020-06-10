@@ -15,22 +15,19 @@ using TopDownShooter.ECS.Components.Templates;
 using MonoGame.Extended.TextureAtlases;
 using TopDownShooter.ECS.Engines;
 
+
 namespace TopDownShooter.Stages
 {
-    /// <summary>
-    /// Primary Stage that manages loading, swapping, and playing of levels
-    /// </summary>
-    public class WorldStage : BaseStage
+    public class PathfindingStage : BaseStage
     {
         private PlayerManager _player;
-        private WeaponManager _weaponManager;
         private TileEngine _tileEngine;
 
         // TODO: Should these be somewhere else? A MapEngine of sorts?
         private TiledMapRenderer _mapRenderer;
         private TiledMap _map;
 
-        public WorldStage() : base()
+        public PathfindingStage() : base()
         {
             _player = new PlayerManager();
         }
@@ -42,7 +39,6 @@ namespace TopDownShooter.Stages
 
             ContentCache.LoadTileset(AssetName.Tileset);
             _player.SetSprite(ContentCache.GetClippedAsset(AssetName.Character_Brown_Idle));
-            _weaponManager = new WeaponManager(contentManager);
         }
 
         public override void Start()
@@ -54,7 +50,8 @@ namespace TopDownShooter.Stages
             _player.InputManager = this.InputManager;
             _player.Camera = this.Camera;
             _tileEngine = this.EntityComponentManager.GetEngine<TileEngine>();
-
+            
+            // Setup Tile Map
             this.EntityComponentManager.AddEntity(
                 new Entity(_tileEngine.BuildTileGrid(_map))
             );
@@ -78,40 +75,7 @@ namespace TopDownShooter.Stages
 
         private void CheckInputs(GameTime gameTime)
         {
-            if (InputManager.IsKeyDown(KeyBinding.Shoot))
-            {
-                var playerWeapon = _player.PlayerEntity.GetComponent<Weapon>();
-                if (playerWeapon.CooldownRemaining <= 0)
-                {
-                    Shoot(gameTime, playerWeapon, _player.PlayerEntity);
-                }
-            }
 
-            if (InputManager.IsKeyDown(KeyBinding.WeaponOne))
-            {
-                _player.SetWeapon(WeaponTemplates.Pistol(_player.PlayerEntity));
-            }
-            if (InputManager.IsKeyDown(KeyBinding.WeaponTwo))
-            {
-                _player.SetWeapon(WeaponTemplates.AssaultRifle(_player.PlayerEntity));
-            }
-            if (InputManager.IsKeyDown(KeyBinding.WeaponThree))
-            {
-                _player.SetWeapon(WeaponTemplates.Shotgun(_player.PlayerEntity));
-            }
-        }
-
-        private void Shoot(GameTime gameTime, Weapon weapon, Entity owner)
-        {
-            Entity[] bullets = _weaponManager.GetBullets(gameTime, weapon, InputManager.GetMousePosition() + this.Camera.Position - owner.Transform.Position);
-
-            for (int i = 0; i < bullets.Length; i++)
-            {
-                EntityComponentManager.AddEntity(bullets[i]);
-            }
-
-            // Update weapon cooldown
-            weapon.CooldownRemaining = weapon.ShotCooldown;
         }
 
         public override void Draw()
@@ -147,10 +111,6 @@ namespace TopDownShooter.Stages
             // Add entities for collidable tiles
             CreateColliders();
 
-            SpawnEnemies();
-
-            // Setup Tile Map
-            //_tileEngine.BuildTileGrid(_map);
             //TODO: Add new entities to ECS with the Tile component
             //TODO: Add single entity to ECS with TileGrid component
         }
@@ -158,7 +118,8 @@ namespace TopDownShooter.Stages
         private void SetupPlayerSpawn()
         {
             var playerSpawn = _map.ObjectLayers.First(x => x.Name == Constants.TileMap.Layers.Spawners).Objects.First(x => x.Name == Constants.TileMap.PlayerSpawn);
-            _player.PlayerEntity.Transform.Position = playerSpawn.Position;
+            var size = _player.PlayerEntity.Collider.BoundingBox.Size;
+            _player.PlayerEntity.Transform.Position = playerSpawn.Position + new Vector2(size.X, -size.Y);
             _player.SetWeapon(WeaponTemplates.Pistol(_player.PlayerEntity));
 
             EntityComponentManager.AddEntity(_player.PlayerEntity);
@@ -180,7 +141,7 @@ namespace TopDownShooter.Stages
             // This tracks if a tile has a collider that accounts for it already.
             // It is used to prevent smaller colliders from generating like: [ [ [ [ [ [ [ ]
             bool[,] colliderCreated = new bool[_map.Width, _map.Height];
-            
+
             for (ushort y = 0; y < layer.Height; y++)
             {
                 for (ushort x = 0; x < layer.Width; x++)
@@ -222,9 +183,30 @@ namespace TopDownShooter.Stages
         {
             TiledMapTile lastTile = firstTile;
 
-            while (layer.TryGetTile((ushort)(lastTile.X + (horizontal ? 1 : 0)), (ushort)(lastTile.Y + (horizontal ? 0 : 1)), out TiledMapTile? temp) && !temp.GetValueOrDefault().IsBlank)
+            // Get next tile
+            ushort x, y;
+            x = lastTile.X;
+            y = lastTile.Y;
+
+            if (horizontal)
+                x += 1;
+            else
+                y += 1;
+
+            var success = layer.TryGetTile(x, y, out TiledMapTile? temp);
+
+            if (success)
             {
-                lastTile = temp.GetValueOrDefault();
+                // TryGetLayer and GetLayer can return success = true and a layer that doesn't actually exist when trying to get a tile outside of bounds sometimes
+                // If we've successfully gotten a tile, double check it's real
+                if (horizontal && temp.Value.Y == lastTile.Y)
+                {
+                    return GetLastTile(layer, temp.Value, horizontal);
+                }
+                else if (!horizontal && temp.Value.X == lastTile.X)
+                {
+                    return GetLastTile(layer, temp.Value, horizontal);
+                }
             }
 
             return lastTile;
@@ -259,31 +241,5 @@ namespace TopDownShooter.Stages
             }
         }
         #endregion
-
-        private void SpawnEnemies()
-        {
-            TiledMapObject[] enemySpawns = _map.ObjectLayers.FirstOrDefault(x => x.Name == Constants.TileMap.Layers.Enemies)?.Objects;
-
-            if (enemySpawns != null)
-            {
-                foreach (TiledMapObject obj in enemySpawns)
-                {
-                    TextureRegion2D sprite = ContentCache.GetClippedAsset(AssetName.Character_Orange_Pistol);
-                    Vector2 size = new Vector2(sprite.Width, sprite.Height);
-                    EnemyType et = Enum.Parse<EnemyType>(obj.Properties.First(x => x.Key == "enemy_type").Value);
-
-                    Entity e = new Entity();
-                    e.AddComponents(new Component[] {
-                        new Transform() { Position = obj.Position },
-                        new Intelligence() { EnemyType = Enum.Parse<EnemyType>(obj.Properties.First(x => x.Key == "enemy_type").Value) },
-                        new Health() { MaxHealth = 50 },
-                        new Sprite() { Texture = sprite },
-                        new BoxCollider() { BoundingBox = new Rectangle((-size / 2).ToPoint(), size.ToPoint()) }
-                    });
-
-                    EntityComponentManager.AddEntity(e);
-                }
-            }
-        }
     }
 }

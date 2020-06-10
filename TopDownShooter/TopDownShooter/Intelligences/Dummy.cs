@@ -12,7 +12,7 @@ namespace TopDownShooter.Intelligences
         public Entity CurrentEntity { get; set; }
         public Entity PlayerEntity { get; set; }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, List<Entity> allEntities)
         {
             CurrentEntity.Transform.Rotation += .1f;
         }

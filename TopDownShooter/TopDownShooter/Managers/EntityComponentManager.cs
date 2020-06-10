@@ -30,9 +30,11 @@ namespace TopDownShooter.Managers
 
         public void Init()
         {
+            // Engines are processed in this order
             int i = 0;
             AddEngine(new TimeToLiveEngine(), i++);
             AddEngine(new HealthEngine(), i++);
+            AddEngine(new TileEngine(), i++);
             AddEngine(new TransformEngine(), i++);
             AddEngine(new PhysicsEngine(), i++);
             AddEngine(new IntelligenceEngine(), i++);
@@ -48,6 +50,13 @@ namespace TopDownShooter.Managers
             item.ProcessingOrder = processingOrder;
             item.Start();
             _engines = _engines.Concat(new Engine[] {item}).OrderBy(x => x.ProcessingOrder);
+        }
+
+        public T GetEngine<T>() where T : Engine
+        {
+            T engine = (T)_engines.FirstOrDefault((x) => x is T);
+
+            return engine;
         }
 
         public void AddEntity(Entity item)

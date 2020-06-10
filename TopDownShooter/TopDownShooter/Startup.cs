@@ -30,7 +30,7 @@ namespace TopDownShooter
             };
             _graphics.ApplyChanges();
 #if DEBUG
-            //this.Window.Position = new Point(-100, 100);
+            // this.Window.Position = new Point(-100, 100);
 #endif
 
             Content.RootDirectory = "Content";

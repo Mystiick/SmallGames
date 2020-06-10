@@ -40,7 +40,7 @@ namespace TopDownShooter.ECS.Engines
                     intel.Implementation.PlayerEntity = playerEntity;
                     intel.Implementation.CurrentEntity = x;
 
-                    intel.Implementation.Update(gameTime);
+                    intel.Implementation.Update(gameTime, allEntities);
                 }
                 
             }
