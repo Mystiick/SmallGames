@@ -51,7 +51,6 @@ namespace TopDownShooter.ECS.Components
                 }
             }
         }
-
 #endif
 
     }
@@ -71,10 +70,12 @@ namespace TopDownShooter.ECS.Components
 
         private const int default_distance = -1;
 
+#if DEBUG
         public string DebugString()
         {
             return string.Format("{0,3}", this.CanTravelThrough ? DistanceToPlayer.ToString() : "*");
         }
+#endif
 
         public void Reset()
         {

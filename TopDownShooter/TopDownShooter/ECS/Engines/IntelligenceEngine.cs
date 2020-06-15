@@ -22,6 +22,7 @@ namespace TopDownShooter.ECS.Engines
             _implementations.Add(EnemyType.None, null);
             _implementations.Add(EnemyType.Dummy, new Dummy());
             _implementations.Add(EnemyType.Turret, new Turret());
+            _implementations.Add(EnemyType.Follower, new Turret());
         }
 
         public override void Update(GameTime gameTime, List<Entity> allEntities)

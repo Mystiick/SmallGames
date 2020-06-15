@@ -70,23 +70,48 @@ namespace TopDownShooter.ECS.Engines
                     {
                         var tile = output.Tiles[x, y];
                         List<Tile> temp = new List<Tile>();
+
+                        bool hasNorth, hasSouth, hasEast, hasWest;
+                        hasNorth = y > 0;
+                        hasSouth = y < output.Tiles.GetUpperBound(1);
+                        hasEast = x < output.Tiles.GetUpperBound(0);
+                        hasWest = x > 0;
+
                         // Set neighbors
-                        if (y > 0)
+                        if (hasNorth)
                         {
                             tile.North = output.Tiles[x, y - 1];
                             temp.Add(tile.North);
+
+                            if (hasWest)
+                            {
+                                temp.Add(output.Tiles[x - 1, y - 1]);
+                            }
+                            if (hasEast)
+                            {
+                                temp.Add(output.Tiles[x + 1, y - 1]);
+                            }
                         }
-                        if (y < output.Tiles.GetUpperBound(1))
+                        if (hasSouth)
                         {
                             tile.South = output.Tiles[x, y + 1];
                             temp.Add(tile.South);
+
+                            if (hasWest)
+                            {
+                                temp.Add(output.Tiles[x - 1, y + 1]);
+                            }
+                            if (hasEast)
+                            {
+                                temp.Add(output.Tiles[x + 1, y + 1]);
+                            }
                         }
-                        if (x > 0)
+                        if (hasWest)
                         {
                             tile.West = output.Tiles[x - 1, y];
                             temp.Add(tile.West);
                         }
-                        if (x < output.Tiles.GetUpperBound(0))
+                        if (hasEast)
                         {
                             tile.East = output.Tiles[x + 1, y];
                             temp.Add(tile.East);
@@ -120,22 +145,37 @@ namespace TopDownShooter.ECS.Engines
             startingTile.Visited = true;
             tileQueue.Enqueue(startingTile);
 
+            Tile[] adjacentTiles;
             while (tileQueue.Count > 0)
             {
                 Tile tile = tileQueue.Dequeue();
+                adjacentTiles = new[] { tile.North, tile.South, tile.East, tile.West };
 
                 // Process any neighbors that have not been visited yet
-                for (int i = 0; i < tile.Neighbors.Length; i++)
+                for (int i = 0; i < adjacentTiles.Length; i++)
                 {
-                    Tile neighbor = tile.Neighbors[i];
+                    Tile neighbor = adjacentTiles[i];
+                    bool addToQueue = ProcessNeighbor(neighbor, tile.DistanceToPlayer);
 
-                    if (!neighbor.Visited && neighbor.CanTravelThrough)
+                    if (addToQueue)
                     {
-                        neighbor.DistanceToPlayer = tile.DistanceToPlayer + 1;
-                        neighbor.Visited = true;
                         tileQueue.Enqueue(neighbor);
                     }
                 }
+            }
+        }
+
+        private bool ProcessNeighbor(Tile neighbor, int distance)
+        {
+            if (neighbor != null && !neighbor.Visited && neighbor.CanTravelThrough)
+            {
+                neighbor.DistanceToPlayer = distance + 1;
+                neighbor.Visited = true;
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
