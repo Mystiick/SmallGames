@@ -140,40 +140,41 @@ namespace TopDownShooter.ECS.Engines
             {
                 this.Entities.ForEach(x =>
                 {
-                    Rectangle collisionBox = x.Collider.BoundingBox;
-
-                    collisionBox.X += (int)x.Transform.Position.X;
-                    collisionBox.Y += (int)x.Transform.Position.Y;
-
-                    Vector3 topLeft = new Vector3(collisionBox.Left, collisionBox.Top, 0);
-                    Vector3 topRight = new Vector3(collisionBox.Right, collisionBox.Top, 0);
-                    Vector3 bottomLeft = new Vector3(collisionBox.Left, collisionBox.Bottom, 0);
-                    Vector3 bottomRight = new Vector3(collisionBox.Right, collisionBox.Bottom, 0);
-
-                    var verts = new VertexPositionColor[]{
-                        new VertexPositionColor(topLeft, Color.White),
-                        new VertexPositionColor(topRight, Color.White),
-                        new VertexPositionColor(bottomRight, Color.White),
-                        new VertexPositionColor(bottomLeft, Color.White),
-                        new VertexPositionColor(topLeft, Color.White),
-                    };
-
-                    var basicEffect = new BasicEffect(gd);
-                    basicEffect.World = Matrix.CreateOrthographicOffCenter(
-                        camera.BoundingRectangle.Left,
-                        camera.BoundingRectangle.Right,
-                        camera.BoundingRectangle.Bottom,
-                        camera.BoundingRectangle.Top,
-                    0, 1);
-
-                    EffectTechnique effectTechnique = basicEffect.Techniques[0];
-                    EffectPassCollection effectPassCollection = effectTechnique.Passes;
-                    foreach (EffectPass pass in effectPassCollection)
-                    {
-                        pass.Apply();
-                        gd.DrawUserPrimitives(PrimitiveType.LineStrip, verts, 0, 4);
-                    }
+                    DrawRectangle( x.Collider.WorldBoundingBox, gd, camera);
+                    DrawRectangle( x.Collider.TargetBoundingBox, gd, camera);
                 });
+            }
+        }
+
+        public void DrawRectangle(Rectangle rect, GraphicsDevice gd, OrthographicCamera camera) 
+        {
+            Vector3 topLeft = new Vector3(rect.Left, rect.Top, 0);
+            Vector3 topRight = new Vector3(rect.Right, rect.Top, 0);
+            Vector3 bottomLeft = new Vector3(rect.Left, rect.Bottom, 0);
+            Vector3 bottomRight = new Vector3(rect.Right, rect.Bottom, 0);
+
+            var verts = new VertexPositionColor[] {
+                new VertexPositionColor(topLeft, Color.White),
+                new VertexPositionColor(topRight, Color.White),
+                new VertexPositionColor(bottomRight, Color.White),
+                new VertexPositionColor(bottomLeft, Color.White),
+                new VertexPositionColor(topLeft, Color.White)
+            };
+
+            var basicEffect = new BasicEffect(gd);
+            basicEffect.World = Matrix.CreateOrthographicOffCenter(
+                camera.BoundingRectangle.Left,
+                camera.BoundingRectangle.Right,
+                camera.BoundingRectangle.Bottom,
+                camera.BoundingRectangle.Top,
+            0, 1);
+
+            EffectTechnique effectTechnique = basicEffect.Techniques[0];
+            EffectPassCollection effectPassCollection = effectTechnique.Passes;
+            foreach (EffectPass pass in effectPassCollection)
+            {
+                pass.Apply();
+                gd.DrawUserPrimitives(PrimitiveType.LineStrip, verts, 0, 4);
             }
         }
 #endif

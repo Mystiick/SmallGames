@@ -33,12 +33,12 @@
 </data>
  </layer>
  <objectgroup id="2" name="Spawners">
-  <object id="1" name="PlayerSpawn" gid="29" x="128.364" y="144.545" width="16" height="16"/>
+  <object id="1" name="PlayerSpawn" gid="29" x="128" y="144" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="4" name="Enemies">
-  <object id="2" name="dummy" gid="32" x="47.5" y="79.75" width="16" height="16">
+  <object id="2" name="dummy" gid="32" x="16" y="32" width="16" height="16">
    <properties>
-    <property name="enemy_type" value="Dummy"/>
+    <property name="enemy_type" value="Follower"/>
    </properties>
   </object>
  </objectgroup>

@@ -117,8 +117,7 @@ namespace TopDownShooter.Stages
         private void SetupPlayerSpawn()
         {
             var playerSpawn = _map.ObjectLayers.First(x => x.Name == Constants.TileMap.Layers.Spawners).Objects.First(x => x.Name == Constants.TileMap.PlayerSpawn);
-            var size = _player.PlayerEntity.Collider.BoundingBox.Size;
-            _player.PlayerEntity.Transform.Position = playerSpawn.Position + new Vector2(size.X, -size.Y);
+            _player.PlayerEntity.Transform.Position = playerSpawn.Position - new Vector2(0, _map.TileHeight); // TODO: Need a better solution than this
             _player.SetWeapon(WeaponTemplates.Pistol(_player.PlayerEntity));
 
             EntityComponentManager.AddEntity(_player.PlayerEntity);
@@ -259,12 +258,12 @@ namespace TopDownShooter.Stages
                         new Transform() { Position = obj.Position },
                         new Intelligence() { EnemyType = Enum.Parse<EnemyType>(obj.Properties.First(x => x.Key == "enemy_type").Value) },
                         new Health() { MaxHealth = 50 },
-                        new Sprite() { Texture = sprite },
-                        new BoxCollider() { BoundingBox = new Rectangle((-size / 2).ToPoint(), size.ToPoint()) },
+                        new Sprite() { Texture = sprite }, 
+                        new BoxCollider() { BoundingBox = new Rectangle(0, 0, (int)size.X, (int)size.Y) },
                         new Velocity() { }
                     });
                     e.Name = $"Enemy-{et}";
-                    e.Transform.Position += new Vector2(e.Sprite.Origin.X + 2, -e.Sprite.Origin.Y);
+                    e.Transform.Position -= new Vector2(0, _map.TileHeight); // TODO: Need a better solution than this
 
                     EntityComponentManager.AddEntity(e);
                 }

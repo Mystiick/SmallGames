@@ -21,14 +21,11 @@ namespace TopDownShooter.ECS.Managers
             get;
         }
 
-        private const int colliderOffsetX = -1;
-        private const int colliderOffsetY = 2;
-
         public PlayerManager()
         {
             PlayerEntity = new Entity(
                 new Transform(),
-                new BoxCollider() { BoundingBox = new Rectangle(colliderOffsetX, colliderOffsetY, 10, 10) },
+                new BoxCollider() { BoundingBox = new Rectangle(0, 0, 10, 10) },
                 new Sprite(),
                 new Velocity(),
                 new Health() { MaxHealth = 3, CurrentHealth = 3 }
@@ -41,11 +38,6 @@ namespace TopDownShooter.ECS.Managers
         {
             var sprite = PlayerEntity.GetComponent<Sprite>();
             sprite.Texture = texture;
-
-            // Offset collider back onto the sprite
-            Rectangle newRectangle = PlayerEntity.Collider.BoundingBox;
-            newRectangle.Location = new Point(colliderOffsetX, colliderOffsetY) - sprite.Origin.ToPoint();            
-            PlayerEntity.Collider.BoundingBox = newRectangle;
         }
 
         public void SetWeapon(Weapon w)
