@@ -81,11 +81,11 @@ namespace TopDownShooter.Tests
     public class ContentCacheManagerWrapper : ContentCacheManager
     {
 
-        public ContentCacheManagerWrapper() : base(null, null)
+        public ContentCacheManagerWrapper() : base(null)
         {
         }
 
-        public ContentCacheManagerWrapper(ContentManager content, MessagingManager messagingManager) : base (content, messagingManager)
+        public ContentCacheManagerWrapper(ContentManager content) : base (content)
         {
         }
 

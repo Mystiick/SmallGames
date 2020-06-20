@@ -7,6 +7,7 @@ using MonoGame.Extended;
 using MonoGame.Extended.Gui;
 using TopDownShooter.Interfaces;
 using TopDownShooter.Managers;
+using TopDownShooter.Services;
 
 namespace TopDownShooter.Stages
 {
@@ -14,7 +15,6 @@ namespace TopDownShooter.Stages
     {
         protected GraphicsDevice GraphicsDevice;
         protected SpriteBatch SpriteBatch;
-        protected MessagingManager MessagingManager;
         protected ContentCacheManager ContentCache;
         protected StageManager StageManager;
         protected GuiSystem UserInterface;
@@ -31,7 +31,6 @@ namespace TopDownShooter.Stages
 
         public virtual void InitializeBase(
             SpriteBatch spriteBatch, 
-            MessagingManager messagingManager, 
             StageManager stageManager, 
             GuiSystem gui,
             IInputManager input,
@@ -39,7 +38,6 @@ namespace TopDownShooter.Stages
         {
             GraphicsDevice = spriteBatch.GraphicsDevice;
             SpriteBatch = spriteBatch;
-            MessagingManager = messagingManager;
             StageManager = stageManager;
             UserInterface = gui;
             InputManager = input;
@@ -80,7 +78,7 @@ namespace TopDownShooter.Stages
             {
                 if (disposing)
                 {
-                    MessagingManager.UnsubscribeParent(this.StageID);
+                    MessagingService.UnsubscribeParent(this.StageID);
                 }
 
                 disposedValue = true;

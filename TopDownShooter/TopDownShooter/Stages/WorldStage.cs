@@ -14,6 +14,7 @@ using MonoGame.Extended;
 using TopDownShooter.ECS.Components.Templates;
 using MonoGame.Extended.TextureAtlases;
 using TopDownShooter.ECS.Engines;
+using TopDownShooter.Services;
 
 namespace TopDownShooter.Stages
 {
@@ -38,7 +39,7 @@ namespace TopDownShooter.Stages
         public override void LoadContent(ContentCacheManager contentManager)
         {
             base.LoadContent(contentManager);
-            MessagingManager.Subscribe(EventType.LoadMap, LoadMap, this.StageID);
+            MessagingService.Subscribe(EventType.LoadMap, LoadMap, this.StageID);
 
             ContentCache.LoadTileset(AssetName.Tileset);
             _player.SetSprite(ContentCache.GetClippedAsset(AssetName.Character_Brown_Idle));
@@ -48,8 +49,8 @@ namespace TopDownShooter.Stages
         public override void Start()
         {
             base.Start();
-            MessagingManager.SendMessage(EventType.UserInterface, Constants.UserInterface.SetActive, this, ScreenName.Score);
-            MessagingManager.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, 0);
+            MessagingService.SendMessage(EventType.UserInterface, Constants.UserInterface.SetActive, this, ScreenName.Score);
+            MessagingService.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, 0);
 
             _player.InputManager = this.InputManager;
             _player.Camera = this.Camera;
@@ -71,7 +72,7 @@ namespace TopDownShooter.Stages
             Vector2 cameraCenter = this.Camera.Position + this.Camera.Origin;
             this.Camera.LookAt(Vector2.Lerp(cameraCenter, _player.PlayerEntity.Transform.Position, 0.1f));
 
-            MessagingManager.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, this.Camera.Zoom);
+            MessagingService.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, this.Camera.Zoom);
 
             this._mapRenderer.Update(gameTime);
         }

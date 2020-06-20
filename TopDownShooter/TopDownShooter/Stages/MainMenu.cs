@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using TopDownShooter.Managers;
+using TopDownShooter.Services;
 
 namespace TopDownShooter.Stages
 {
@@ -21,8 +22,8 @@ namespace TopDownShooter.Stages
         {
             base.Start();
 
-            MessagingManager.Subscribe(EventType.UserInterface, Constants.MainMenu.PlayButtonAction, Play_Click, this.StageID);
-            MessagingManager.Subscribe(EventType.UserInterface, Constants.MainMenu.PathfinderButtonAction, Pathfinder_Click, this.StageID);
+            MessagingService.Subscribe(EventType.UserInterface, Constants.MainMenu.PlayButtonAction, Play_Click, this.StageID);
+            MessagingService.Subscribe(EventType.UserInterface, Constants.MainMenu.PathfinderButtonAction, Pathfinder_Click, this.StageID);
         }
 
         public override void LoadContent(ContentCacheManager contentManager)
@@ -38,13 +39,13 @@ namespace TopDownShooter.Stages
         private void Play_Click(object sender, object args)
         {
             StageManager.SetNextStage<WorldStage>();
-            MessagingManager.SendMessage(EventType.LoadMap, "setup_world", this, "MiniComplex");
+            MessagingService.SendMessage(EventType.LoadMap, "setup_world", this, "MiniComplex");
         }
 
         private void Pathfinder_Click(object sender, object args)
         {
             StageManager.SetNextStage<WorldStage>();
-            MessagingManager.SendMessage(EventType.LoadMap, "setup_world", this, "Pathfinder");
+            MessagingService.SendMessage(EventType.LoadMap, "setup_world", this, "Pathfinder");
         }
     }
 }

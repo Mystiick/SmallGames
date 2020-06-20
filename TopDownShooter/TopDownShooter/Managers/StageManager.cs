@@ -11,15 +11,13 @@ namespace TopDownShooter.Managers
 
         private readonly SpriteBatch _spriteBatch;
         private readonly ContentCacheManager _contentCache;
-        private readonly MessagingManager _messagingManager;
         private readonly GuiSystem _gui;
         private readonly IInputManager _input;
 
-        public StageManager(SpriteBatch spriteBatch, ContentCacheManager contentManager, MessagingManager messagingManager, GuiSystem gui, IInputManager inputManager)
+        public StageManager(SpriteBatch spriteBatch, ContentCacheManager contentManager, GuiSystem gui, IInputManager inputManager)
         {
             _spriteBatch = spriteBatch;
             _contentCache = contentManager;
-            _messagingManager = messagingManager;
             _gui = gui;
             _input = inputManager;
         }
@@ -39,7 +37,7 @@ namespace TopDownShooter.Managers
         public void SetNextStage<T>(object[] arguments = null) where T : BaseStage, new()
         {
             NextStage = new T();
-            NextStage.InitializeBase(_spriteBatch, _messagingManager, this, _gui, _input, arguments);
+            NextStage.InitializeBase(_spriteBatch, this, _gui, _input, arguments);
             NextStage.LoadContent(_contentCache);
         }
 

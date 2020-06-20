@@ -6,6 +6,7 @@ using MonoGame.Extended.Gui;
 using TopDownShooter.Managers;
 using MonoGame.Extended.ViewportAdapters;
 using MonoGame.Extended.BitmapFonts;
+using TopDownShooter.Services;
 
 namespace TopDownShooter
 {
@@ -16,7 +17,6 @@ namespace TopDownShooter
         private StageManager _stageManager;
         private ContentCacheManager _contentManager;
         private GuiSystem _gui;
-        private MessagingManager _messagingManager;
         private InputManager _inputManager;
         private readonly Guid _parentGuid;
 
@@ -36,6 +36,7 @@ namespace TopDownShooter
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             _parentGuid = Guid.NewGuid();
+            MessagingService.Init();
         }
 
         protected override void Initialize()
@@ -57,15 +58,14 @@ namespace TopDownShooter
             // 5. User Interface
             // 6. State Manager
             //     Dependent on Messaging Manager, Sprite Batch, ContentManager, InputManager, and UI
-            _messagingManager = new MessagingManager();
             _inputManager = new InputManager();
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             
-            _contentManager = new ContentCacheManager(Content, _messagingManager);
+            _contentManager = new ContentCacheManager(Content);
 
             SetupDefaultUi();
 
-            _stageManager = new StageManager(_spriteBatch, _contentManager, _messagingManager, _gui, _inputManager);
+            _stageManager = new StageManager(_spriteBatch, _contentManager, _gui, _inputManager);
             _stageManager.SetNextStage<Stages.MainMenu>();
         }
 
@@ -116,7 +116,7 @@ namespace TopDownShooter
 
             _gui = new GuiSystem(viewportAdapter, guiRenderer) { ActiveScreen = _contentManager.GetScreen(ScreenName.MainMenu) };
 
-            _messagingManager.Subscribe(EventType.UserInterface, Constants.UserInterface.SetActive, (sender, args) => { _gui.ActiveScreen = _contentManager.GetScreen((ScreenName)args); }, _parentGuid);
+            MessagingService.Subscribe(EventType.UserInterface, Constants.UserInterface.SetActive, (sender, args) => { _gui.ActiveScreen = _contentManager.GetScreen((ScreenName)args); }, _parentGuid);
         }
     }
 }

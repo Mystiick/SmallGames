@@ -61,7 +61,7 @@ namespace TopDownShooter.Managers
             if (throwIfNoneFound && !_subscriptions.Any(x => x.ID == handlerID))
             {
                 throw new ArgumentException($"ID {handlerID.ToString()} has no subscriptions.");
-            }            
+            }
 
             return this.Unsubscribe(handlerID);
         }

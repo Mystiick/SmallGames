@@ -21,7 +21,7 @@ namespace TopDownShooter.Tests.Managers
         public void StageManager_SetNextScene_InitializesAndLoadsContent()
         {
             // Arrange
-            var unit = new StageManager(null, null, null, null, null);
+            var unit = new StageManager(null, null, null, null);
 
             // Act
             unit.SetNextStage<TestStage>();
@@ -36,7 +36,7 @@ namespace TopDownShooter.Tests.Managers
         public void StageManager_Update_UpdatesCurrentScene()
         {
             // Arrange
-            var unit = new StageManager(null, null, null, null, new InputManager()); // TODO: Mock
+            var unit = new StageManager(null, null, null, new InputManager()); // TODO: Mock
 
             // Act
             unit.SetNextStage<TestStage>();
@@ -50,7 +50,7 @@ namespace TopDownShooter.Tests.Managers
         public void StageManager_Update_SetsNextScene()
         {
             // Arrange
-            var unit = new StageManager(null, null, null, null, new InputManager()); // TODO: Mock
+            var unit = new StageManager(null, null, null, new InputManager()); // TODO: Mock
 
             // Act
             unit.SetNextStage<TestStage>();
@@ -68,7 +68,7 @@ namespace TopDownShooter.Tests.Managers
             public bool ContentLoaded { get; private set; }
             public bool Updated { get; private set; }
 
-            public override void InitializeBase(SpriteBatch spriteBatch, MessagingManager messagingManager, StageManager stageManager, GuiSystem gui, IInputManager input, object[] args)
+            public override void InitializeBase(SpriteBatch spriteBatch, StageManager stageManager, GuiSystem gui, IInputManager input, object[] args)
             {
                 this.Initialized = true;
             }

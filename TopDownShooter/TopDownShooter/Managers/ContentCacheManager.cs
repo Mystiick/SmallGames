@@ -16,17 +16,15 @@ namespace TopDownShooter.Managers
     public class ContentCacheManager
     {
         private readonly ContentManager _content;
-        private readonly MessagingManager _messagingManager;
         private readonly Dictionary<AssetName, Texture2D> _textureCache;
         private readonly Dictionary<ScreenName, IScreen> _screenCache;
         private readonly Dictionary<string, TiledMap> _tiledCache;
 
         private TextureAtlas atlas;
 
-        public ContentCacheManager(ContentManager content, MessagingManager messagingManager)
+        public ContentCacheManager(ContentManager content)
         {
             _content = content;
-            _messagingManager = messagingManager;
 
             _textureCache = new Dictionary<AssetName, Texture2D>();
             _screenCache = new Dictionary<ScreenName, IScreen>();
@@ -90,8 +88,8 @@ namespace TopDownShooter.Managers
             switch (screen)
             {
                 case ScreenName.None: output = new BlankScreen(); break;
-                case ScreenName.MainMenu: output = new MainMenuScreen(_messagingManager); break;
-                case ScreenName.Score: output = new ScoreScreen(_messagingManager); break;
+                case ScreenName.MainMenu: output = new MainMenuScreen(); break;
+                case ScreenName.Score: output = new ScoreScreen(); break;
                 default: output = new BlankScreen(); break;
             }
 
