@@ -19,7 +19,7 @@ namespace TopDownShooter.Tests.Managers
             // Arrange
             var unit = new WeaponManager(new ContentCacheManagerWrapper(), new RandomWrapper());
             Entity[] output;
-            Entity owner = new Entity(new Transform());
+            Entity owner = new Entity(new Transform(), new Sprite());
             Bullet bullet = new Bullet() { Owner = owner };
             Weapon weapon = new Weapon() { BulletsPerShot = 3, Bullet = bullet };
             var gameTime = new GameTime() { ElapsedGameTime = new System.TimeSpan(0, 0, 1) };
