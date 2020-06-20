@@ -11,6 +11,7 @@ namespace TopDownShooter.ECS.Components
         public Tile[,] Tiles;
         public int TileWidth;
         public int TileHeight;
+        public Point MapSize;
 
         public void Reset()
         {

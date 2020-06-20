@@ -148,11 +148,6 @@ namespace TopDownShooter.Stages
             CreateColliders();
 
             SpawnEnemies();
-
-            // Setup Tile Map
-            //_tileEngine.BuildTileGrid(_map);
-            //TODO: Add new entities to ECS with the Tile component
-            //TODO: Add single entity to ECS with TileGrid component
         }
 
         private void SetupPlayerSpawn()

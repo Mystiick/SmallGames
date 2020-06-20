@@ -42,7 +42,8 @@ namespace TopDownShooter.ECS.Engines
             {
                 Tiles = new Tile[map.Width, map.Height],
                 TileWidth = map.TileWidth,
-                TileHeight = map.TileHeight
+                TileHeight = map.TileHeight,
+                MapSize = new Point(map.Width, map.Height)
             };
 
             for (int y = 0; y < map.Height; y++)
@@ -64,17 +65,17 @@ namespace TopDownShooter.ECS.Engines
 
             for (int i = 0; i < collidableLayers.Length; i++)
             {
-                for (int y = 0; y < map.Height; y++)
+                for (int y = 0; y < output.MapSize.Y; y++)
                 {
-                    for (int x = 0; x < map.Height; x++)
+                    for (int x = 0; x < output.MapSize.Y; x++)
                     {
                         var tile = output.Tiles[x, y];
                         List<Tile> temp = new List<Tile>();
 
                         bool hasNorth, hasSouth, hasEast, hasWest;
                         hasNorth = y > 0;
-                        hasSouth = y < output.Tiles.GetUpperBound(1);
-                        hasEast = x < output.Tiles.GetUpperBound(0);
+                        hasSouth = y < output.MapSize.Y - 1;
+                        hasEast = x < output.MapSize.X - 1;
                         hasWest = x > 0;
 
                         // Set neighbors
