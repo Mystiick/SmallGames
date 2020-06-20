@@ -158,7 +158,7 @@ namespace TopDownShooter.Stages
         private void SetupPlayerSpawn()
         {
             var playerSpawn = _map.ObjectLayers.First(x => x.Name == Constants.TileMap.Layers.Spawners).Objects.First(x => x.Name == Constants.TileMap.PlayerSpawn);
-            _player.PlayerEntity.Transform.Position = playerSpawn.Position;
+            _player.PlayerEntity.Transform.Position = playerSpawn.Position - new Vector2(0, _map.TileHeight); // TODO: Need a better solution than this
             _player.SetWeapon(WeaponTemplates.Pistol(_player.PlayerEntity));
 
             EntityComponentManager.AddEntity(_player.PlayerEntity);
@@ -222,9 +222,30 @@ namespace TopDownShooter.Stages
         {
             TiledMapTile lastTile = firstTile;
 
-            while (layer.TryGetTile((ushort)(lastTile.X + (horizontal ? 1 : 0)), (ushort)(lastTile.Y + (horizontal ? 0 : 1)), out TiledMapTile? temp) && !temp.GetValueOrDefault().IsBlank)
+            // Get next tile
+            ushort x, y;
+            x = lastTile.X;
+            y = lastTile.Y;
+
+            if (horizontal)
+                x += 1;
+            else
+                y += 1;
+
+            var success = layer.TryGetTile(x, y, out TiledMapTile? temp);
+
+            if (success)
             {
-                lastTile = temp.GetValueOrDefault();
+                // TryGetLayer and GetLayer can return success = true and a layer that doesn't actually exist when trying to get a tile outside of bounds sometimes
+                // If we've successfully gotten a tile, double check it's real
+                if (horizontal && temp.Value.Y == lastTile.Y)
+                {
+                    return GetLastTile(layer, temp.Value, horizontal);
+                }
+                else if (!horizontal && temp.Value.X == lastTile.X)
+                {
+                    return GetLastTile(layer, temp.Value, horizontal);
+                }
             }
 
             return lastTile;
@@ -278,10 +299,11 @@ namespace TopDownShooter.Stages
                         new Intelligence() { EnemyType = Enum.Parse<EnemyType>(obj.Properties.First(x => x.Key == "enemy_type").Value) },
                         new Health() { MaxHealth = 50 },
                         new Sprite() { Texture = sprite },
-                        new BoxCollider() { BoundingBox = new Rectangle((-size / 2).ToPoint(), size.ToPoint()) },
+                        new BoxCollider() { BoundingBox = new Rectangle(0, 0, (int)size.X, (int)size.Y) },
                         new Velocity() { }
                     });
                     e.Name = $"Enemy-{et}";
+                    e.Transform.Position -= new Vector2(0, _map.TileHeight); // TODO: Need a better solution than this
 
                     EntityComponentManager.AddEntity(e);
                 }

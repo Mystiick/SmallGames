@@ -43,7 +43,7 @@ namespace TopDownShooter.Stages
 
         private void Pathfinder_Click(object sender, object args)
         {
-            StageManager.SetNextStage<PathfindingStage>();
+            StageManager.SetNextStage<WorldStage>();
             MessagingManager.SendMessage(EventType.LoadMap, "setup_world", this, "Pathfinder");
         }
     }
