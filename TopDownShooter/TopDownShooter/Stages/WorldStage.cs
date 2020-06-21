@@ -13,6 +13,8 @@ using TopDownShooter.ECS.Components;
 using MonoGame.Extended;
 using TopDownShooter.ECS.Components.Templates;
 using MonoGame.Extended.TextureAtlases;
+using TopDownShooter.ECS.Engines;
+using TopDownShooter.Services;
 
 namespace TopDownShooter.Stages
 {
@@ -23,10 +25,12 @@ namespace TopDownShooter.Stages
     {
         private PlayerManager _player;
         private WeaponManager _weaponManager;
+        private TileEngine _tileEngine;
 
-        // TODO: Should these be somewhere else?
+        // TODO: Should these be somewhere else? A MapEngine of sorts?
         private TiledMapRenderer _mapRenderer;
         private TiledMap _map;
+
         public WorldStage() : base()
         {
             _player = new PlayerManager();
@@ -35,7 +39,7 @@ namespace TopDownShooter.Stages
         public override void LoadContent(ContentCacheManager contentManager)
         {
             base.LoadContent(contentManager);
-            MessagingManager.Subscribe(EventType.LoadMap, LoadMap, this.StageID);
+            MessagingService.Subscribe(EventType.LoadMap, LoadMap, this.StageID);
 
             ContentCache.LoadTileset(AssetName.Tileset);
             _player.SetSprite(ContentCache.GetClippedAsset(AssetName.Character_Brown_Idle));
@@ -45,11 +49,16 @@ namespace TopDownShooter.Stages
         public override void Start()
         {
             base.Start();
-            MessagingManager.SendMessage(EventType.UserInterface, Constants.UserInterface.SetActive, this, ScreenName.Score);
-            MessagingManager.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, 0);
+            MessagingService.SendMessage(EventType.UserInterface, Constants.UserInterface.SetActive, this, ScreenName.Score);
+            MessagingService.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, 0);
 
             _player.InputManager = this.InputManager;
             _player.Camera = this.Camera;
+            _tileEngine = this.EntityComponentManager.GetEngine<TileEngine>();
+
+            this.EntityComponentManager.AddEntity(
+                new Entity(_tileEngine.BuildTileGrid(_map))
+            );
         }
 
         public override void Update(GameTime gameTime)
@@ -63,7 +72,7 @@ namespace TopDownShooter.Stages
             Vector2 cameraCenter = this.Camera.Position + this.Camera.Origin;
             this.Camera.LookAt(Vector2.Lerp(cameraCenter, _player.PlayerEntity.Transform.Position, 0.1f));
 
-            MessagingManager.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, this.Camera.Zoom);
+            MessagingService.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, this.Camera.Zoom);
 
             this._mapRenderer.Update(gameTime);
         }
@@ -145,7 +154,7 @@ namespace TopDownShooter.Stages
         private void SetupPlayerSpawn()
         {
             var playerSpawn = _map.ObjectLayers.First(x => x.Name == Constants.TileMap.Layers.Spawners).Objects.First(x => x.Name == Constants.TileMap.PlayerSpawn);
-            _player.PlayerEntity.Transform.Position = playerSpawn.Position;
+            _player.PlayerEntity.Transform.Position = playerSpawn.Position - new Vector2(0, _map.TileHeight); // TODO: Need a better solution than this
             _player.SetWeapon(WeaponTemplates.Pistol(_player.PlayerEntity));
 
             EntityComponentManager.AddEntity(_player.PlayerEntity);
@@ -209,9 +218,30 @@ namespace TopDownShooter.Stages
         {
             TiledMapTile lastTile = firstTile;
 
-            while (layer.TryGetTile((ushort)(lastTile.X + (horizontal ? 1 : 0)), (ushort)(lastTile.Y + (horizontal ? 0 : 1)), out TiledMapTile? temp) && !temp.GetValueOrDefault().IsBlank)
+            // Get next tile
+            ushort x, y;
+            x = lastTile.X;
+            y = lastTile.Y;
+
+            if (horizontal)
+                x += 1;
+            else
+                y += 1;
+
+            var success = layer.TryGetTile(x, y, out TiledMapTile? temp);
+
+            if (success)
             {
-                lastTile = temp.GetValueOrDefault();
+                // TryGetLayer and GetLayer can return success = true and a layer that doesn't actually exist when trying to get a tile outside of bounds sometimes
+                // If we've successfully gotten a tile, double check it's real
+                if (horizontal && temp.Value.Y == lastTile.Y)
+                {
+                    return GetLastTile(layer, temp.Value, horizontal);
+                }
+                else if (!horizontal && temp.Value.X == lastTile.X)
+                {
+                    return GetLastTile(layer, temp.Value, horizontal);
+                }
             }
 
             return lastTile;
@@ -265,8 +295,11 @@ namespace TopDownShooter.Stages
                         new Intelligence() { EnemyType = Enum.Parse<EnemyType>(obj.Properties.First(x => x.Key == "enemy_type").Value) },
                         new Health() { MaxHealth = 50 },
                         new Sprite() { Texture = sprite },
-                        new BoxCollider() { BoundingBox = new Rectangle((-size / 2).ToPoint(), size.ToPoint()) }
+                        new BoxCollider() { BoundingBox = new Rectangle(0, 0, (int)size.X, (int)size.Y) },
+                        new Velocity() { }
                     });
+                    e.Name = $"Enemy-{et}";
+                    e.Transform.Position -= new Vector2(0, _map.TileHeight); // TODO: Need a better solution than this
 
                     EntityComponentManager.AddEntity(e);
                 }

@@ -378,6 +378,11 @@
 /processor:TiledMapProcessor
 /build:Maps/Outpost.tmx
 
+#begin Maps/Pathfinder.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:Maps/Pathfinder.tmx
+
 #begin tilesheet_transparent.png
 /importer:TextureImporter
 /processor:TextureProcessor

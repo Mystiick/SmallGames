@@ -9,6 +9,7 @@ using TopDownShooter.ECS.Components;
 using TopDownShooter.ECS.Managers;
 using TopDownShooter.Managers;
 using MonoGame.Extended.Tiled;
+using TopDownShooter.Services;
 
 namespace TopDownShooter.Stages
 {
@@ -36,8 +37,8 @@ namespace TopDownShooter.Stages
         {
             base.Start();
 
-            MessagingManager.SendMessage(EventType.UserInterface, Constants.UserInterface.SetActive, this, ScreenName.Score);
-            MessagingManager.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, 0);
+            MessagingService.SendMessage(EventType.UserInterface, Constants.UserInterface.SetActive, this, ScreenName.Score);
+            MessagingService.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, 0);
 
             EntityComponentManager.AddEntity(_player.PlayerEntity);
             _player.InputManager = this.InputManager;
@@ -85,7 +86,7 @@ namespace TopDownShooter.Stages
             Vector2 cameraCenter = this.Camera.Position + this.Camera.Origin;
             this.Camera.LookAt(Vector2.Lerp(cameraCenter, _player.PlayerEntity.Transform.Position, 0.1f));
 
-            MessagingManager.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, this.Camera.Zoom);
+            MessagingService.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, this.Camera.Zoom);
 
             this._mapRenderer.Update(gameTime);
         }

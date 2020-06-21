@@ -105,7 +105,8 @@ namespace TopDownShooter
     {
         None,
         Dummy,
-        Turret
+        Turret,
+        Follower
     }
 
     public enum WeaponType

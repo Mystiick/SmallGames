@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System;
+
 using TopDownShooter.Managers;
 using TopDownShooter.Models;
 

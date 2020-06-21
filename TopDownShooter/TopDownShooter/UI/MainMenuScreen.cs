@@ -5,19 +5,18 @@ using MonoGame.Extended.Gui;
 using MonoGame.Extended.Gui.Controls;
 using MonoGame.Extended.Gui.Markup;
 using TopDownShooter.Managers;
+using TopDownShooter.Services;
 
 namespace TopDownShooter.UI
 {
     public class MainMenuScreen : IScreen
     {
         private readonly string markupPath = "UI\\MainMenu.xml";
-        private readonly MessagingManager _messageManager;
 
         public Screen Screen { get; private set; }
 
-        public MainMenuScreen(MessagingManager messagingManager)
+        public MainMenuScreen()
         {
-            _messageManager = messagingManager;
             LoadFromMarkup();
         }
 
@@ -38,7 +37,10 @@ namespace TopDownShooter.UI
             quitButton.Clicked += (sender, args) => System.Environment.Exit(0);
 
             var playButton = Screen.FindControl<Button>("btnPlay");
-            playButton.Clicked += (sender, args) => _messageManager.SendMessage(EventType.UserInterface, Constants.MainMenu.PlayButtonAction, this, null);
+            playButton.Clicked += (sender, args) => MessagingService.SendMessage(EventType.UserInterface, Constants.MainMenu.PlayButtonAction, this, null);
+
+            var pathfinderButton = Screen.FindControl<Button>("btnPathfinder");
+            pathfinderButton.Clicked += (sender, args) => MessagingService.SendMessage(EventType.UserInterface, Constants.MainMenu.PathfinderButtonAction, this, null);
 
 #if DEBUG
             var spDebug = Screen.FindControl<StackPanel>("spDebug");

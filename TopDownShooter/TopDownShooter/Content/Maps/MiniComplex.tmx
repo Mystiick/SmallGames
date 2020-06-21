@@ -100,7 +100,7 @@
   </object>
   <object id="9" name="dummy" gid="99" x="401.667" y="401.333" width="16" height="16">
    <properties>
-    <property name="enemy_type" value="Dummy"/>
+    <property name="enemy_type" value="Follower"/>
    </properties>
   </object>
  </objectgroup>

@@ -11,7 +11,7 @@ namespace TopDownShooter.Managers
     {
         readonly ContentCacheManager _contentCacheManager;
         readonly Random _rng;
-        const float bulletSpeed = 25f;
+        const float BASE_BULLET_SPEED = 500f;
 
         public WeaponManager(ContentCacheManager ccm, Random random = null)
         {
@@ -45,9 +45,9 @@ namespace TopDownShooter.Managers
 
             Entity e = new Entity();
             e.AddComponents(new Component[] {
-                new Transform() { Position = weapon.Bullet.Owner.Transform.Position, Rotation = weapon.Bullet.Owner.Transform.Rotation },
+                new Transform() { Position = weapon.Bullet.Owner.Transform.Position + weapon.Bullet.Owner.Sprite.Origin, Rotation = weapon.Bullet.Owner.Transform.Rotation },
                 new Sprite() { Texture = _contentCacheManager.GetClippedAsset(AssetName.Bullet) },
-                new Velocity() { Direction =  bulletDirection, Speed = (float)gameTime.ElapsedGameTime.TotalSeconds * bulletSpeed * weapon.BulletSpeed },
+                new Velocity() { Direction =  bulletDirection, Speed = BASE_BULLET_SPEED * weapon.BulletSpeed },
                 new BoxCollider() { BoundingBox = new Rectangle(1, 0, 1, 1), Trigger = true, Continuous = true, OnCollisionEnter = weapon.Bullet.OnBulletHit },
                 new TimeToLive() { Lifespan = weapon.Range / weapon.BulletSpeed },
                 weapon.Bullet

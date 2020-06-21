@@ -5,6 +5,7 @@
         public struct MainMenu
         {
             public const string PlayButtonAction = "MainMenu.PlayButton";
+            public const string PathfinderButtonAction = "MainMenu.Pathfinder";
         }
 
         public struct UserInterface

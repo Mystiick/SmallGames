@@ -65,7 +65,7 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
             // Arrange
             var entity = new Entity(
                 new Transform() { Position = Vector2.Zero },
-                new Velocity() { Direction = new Vector2(5, 0), Speed = 1f }, // NOTE: This is set to 5 intentionally. The direction should be Normalized, converting into (1, 0) in this scenario
+                new Velocity() { Direction = new Vector2(5, 0), Speed = 1000f }, // NOTE: This is set to 5 intentionally. The direction should be Normalized, converting into (1, 0) in this scenario
                 new BoxCollider()
             );
             ecs.AddEntity(entity);
@@ -84,7 +84,7 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
             // Arrange
             var entity = new Entity(
                 new Transform() { Position = Vector2.Zero },
-                new Velocity() { Direction = new Vector2(5, 0), Speed = 1f },
+                new Velocity() { Direction = new Vector2(5, 0), Speed = 1000f },
                 new BoxCollider() { BoundingBox = new Rectangle(0, 0, 10, 10) }
             );
             ecs.AddEntity(entity);
@@ -108,7 +108,7 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
             // Arrange
             var entity = new Entity(
                 new Transform() { Position = Vector2.Zero },
-                new Velocity() { Direction = new Vector2(1, 1), Speed = 1f },
+                new Velocity() { Direction = new Vector2(1, 1), Speed = 1000f },
                 new BoxCollider() { BoundingBox = new Rectangle(0, 0, 10, 10) }
             );
             ecs.AddEntity(entity);
@@ -133,7 +133,7 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
             // Arrange
             var entity = new Entity(
                 new Transform() { Position = Vector2.Zero },
-                new Velocity() { Direction = new Vector2(1, 1), Speed = 1f },
+                new Velocity() { Direction = new Vector2(1, 1), Speed = 1000f },
                 new BoxCollider() { BoundingBox = new Rectangle(0, 0, 10, 10) }
             );
             ecs.AddEntity(entity);
@@ -160,7 +160,7 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
 
             var entity = new Entity(
                 new Transform() { Position = Vector2.Zero },
-                new Velocity() { Direction = new Vector2(1, 1), Speed = 1f },
+                new Velocity() { Direction = new Vector2(1, 1), Speed = 1000f },
                 new BoxCollider() { BoundingBox = new Rectangle(0, 0, 10, 10), Trigger = true, OnCollisionEnter = (a, b) => { success = true; } }
             );
             ecs.AddEntity(entity);
@@ -186,7 +186,7 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
 
             var entity = new Entity(
                 new Transform() { Position = Vector2.Zero },
-                new Velocity() { Direction = new Vector2(1, 0), Speed = 1f },
+                new Velocity() { Direction = new Vector2(1, 0), Speed = 1000f },
                 new BoxCollider() { BoundingBox = new Rectangle(0, 0, 10, 10), Continuous = true, Trigger = true, OnCollisionEnter = (a, b) => { success = false; } }
             )
             { 
@@ -220,7 +220,7 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
 
             var entity = new Entity(
                 new Transform() { Position = Vector2.Zero },
-                new Velocity() { Direction = new Vector2(1, 0), Speed = 1f },
+                new Velocity() { Direction = new Vector2(1, 0), Speed = 1000f },
                 new BoxCollider() { 
                     BoundingBox = new Rectangle(0, 0, 10, 10), 
                     Continuous = true, 

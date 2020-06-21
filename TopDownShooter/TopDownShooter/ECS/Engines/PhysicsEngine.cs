@@ -78,14 +78,9 @@ namespace TopDownShooter.ECS.Engines
                     float distance = Vector2.Distance(entity.Collider.WorldBoundingBox.Center.ToVector2(), entity.Collider.TargetBoundingBox.Center.ToVector2());
 
                     // Shoot a ray from the last location towards the current location
-                    Ray r = new Ray(new Vector3(entity.Collider.WorldBoundingBox.Center.ToVector2(), 0f), new Vector3(entity.GetComponent<Velocity>().Direction, 0f));
-                    BoundingBox bb = new BoundingBox(
-                        new Vector3(other.Collider.WorldBoundingBox.Location.ToVector2(), 0f),
-                        new Vector3((other.Collider.WorldBoundingBox.Location + other.Collider.WorldBoundingBox.Size).ToVector2(), 0f)
-                    );
+                    var val = PhysicsEngine.CastRay(entity.Collider.WorldBoundingBox.Center.ToVector2(), entity.GetComponent<Velocity>().Direction, other.Collider);
 
                     // If there's a collision, and the collision is less than the distance between the old and new location, there was a raycast hit
-                    float? val = r.Intersects(bb);
                     if (val.HasValue && val.Value <= distance)
                     {
                         output.Add(other);
@@ -132,6 +127,60 @@ namespace TopDownShooter.ECS.Engines
             }
         }
 
+        /// <summary>
+        /// Gets the intersection distance between <paramref name="r"/> and <paramref name="targetCollider"/>
+        /// </summary>
+        public static float? CastRay(Ray r, BoxCollider targetCollider)
+        {
+            BoundingBox bb = new BoundingBox(
+                new Vector3(targetCollider.WorldBoundingBox.Location.ToVector2(), 0f),
+                new Vector3((targetCollider.WorldBoundingBox.Location + targetCollider.WorldBoundingBox.Size).ToVector2(), 0f)
+            );
+
+            return r.Intersects(bb);
+        }
+
+        /// <summary>
+        /// Casts a Ray from the <paramref name="origin"/> toward <paramref name="direction"/>. 
+        /// If a collision with <paramref name="targetCollider"/> is found at any range, the output float? will have a value
+        /// </summary>
+        /// <param name="origin">World location to begin the ray</param>
+        /// <param name="direction">Direction *relative to the origin* to shoot the ray</param>
+        /// <param name="targetCollider">Collider to check</param>
+        public static float? CastRay(Vector2 origin, Vector2 direction, BoxCollider targetCollider)
+        {
+            Ray r = new Ray(new Vector3(origin, 0f), new Vector3(direction, 0f));
+            return CastRay(r, targetCollider);
+        }
+
+        /// <summary>
+        /// Gets all colliding entities between <paramref name="origin"/> and <paramref name="direction"/>*<paramref name="maxDistance"/>
+        /// </summary>
+        public static Entity[] CastAll(Vector2 origin, Vector2 direction, float maxDistance, List<Entity> targets)
+        {
+            var output = new List<Entity>();
+            Ray r = new Ray(new Vector3(origin, 0f), new Vector3(direction, 0f));
+
+            for (int i = 0; i < targets.Count; i++)
+            {
+                Entity temp = targets[i];
+                float? rayDistance;
+
+                if (temp.Collider != null)
+                {
+                    rayDistance = CastRay(r, temp.Collider);
+
+                    if (rayDistance.HasValue && rayDistance.Value < maxDistance)
+                    {
+                        output.Add(targets[i]);
+                    }
+                }
+            }
+
+            return output.ToArray();
+        }
+
+        #region | DEBUG |
 #if DEBUG
         public override void Draw(SpriteBatch sb, GraphicsDevice gd, OrthographicCamera camera)
         {
@@ -140,43 +189,45 @@ namespace TopDownShooter.ECS.Engines
             {
                 this.Entities.ForEach(x =>
                 {
-                    Rectangle collisionBox = x.Collider.BoundingBox;
-
-                    collisionBox.X += (int)x.Transform.Position.X;
-                    collisionBox.Y += (int)x.Transform.Position.Y;
-
-                    Vector3 topLeft = new Vector3(collisionBox.Left, collisionBox.Top, 0);
-                    Vector3 topRight = new Vector3(collisionBox.Right, collisionBox.Top, 0);
-                    Vector3 bottomLeft = new Vector3(collisionBox.Left, collisionBox.Bottom, 0);
-                    Vector3 bottomRight = new Vector3(collisionBox.Right, collisionBox.Bottom, 0);
-
-                    var verts = new VertexPositionColor[]{
-                        new VertexPositionColor(topLeft, Color.White),
-                        new VertexPositionColor(topRight, Color.White),
-                        new VertexPositionColor(bottomRight, Color.White),
-                        new VertexPositionColor(bottomLeft, Color.White),
-                        new VertexPositionColor(topLeft, Color.White),
-                    };
-
-                    var basicEffect = new BasicEffect(gd);
-                    basicEffect.World = Matrix.CreateOrthographicOffCenter(
-                        camera.BoundingRectangle.Left,
-                        camera.BoundingRectangle.Right,
-                        camera.BoundingRectangle.Bottom,
-                        camera.BoundingRectangle.Top,
-                    0, 1);
-
-                    EffectTechnique effectTechnique = basicEffect.Techniques[0];
-                    EffectPassCollection effectPassCollection = effectTechnique.Passes;
-                    foreach (EffectPass pass in effectPassCollection)
-                    {
-                        pass.Apply();
-                        gd.DrawUserPrimitives(PrimitiveType.LineStrip, verts, 0, 4);
-                    }
+                    DrawRectangle(x.Collider.WorldBoundingBox, gd, camera);
+                    DrawRectangle(x.Collider.TargetBoundingBox, gd, camera);
                 });
             }
         }
+
+        public void DrawRectangle(Rectangle rect, GraphicsDevice gd, OrthographicCamera camera) 
+        {
+            Vector3 topLeft = new Vector3(rect.Left, rect.Top, 0);
+            Vector3 topRight = new Vector3(rect.Right, rect.Top, 0);
+            Vector3 bottomLeft = new Vector3(rect.Left, rect.Bottom, 0);
+            Vector3 bottomRight = new Vector3(rect.Right, rect.Bottom, 0);
+
+            var verts = new VertexPositionColor[] {
+                new VertexPositionColor(topLeft, Color.White),
+                new VertexPositionColor(topRight, Color.White),
+                new VertexPositionColor(bottomRight, Color.White),
+                new VertexPositionColor(bottomLeft, Color.White),
+                new VertexPositionColor(topLeft, Color.White)
+            };
+
+            var basicEffect = new BasicEffect(gd);
+            basicEffect.World = Matrix.CreateOrthographicOffCenter(
+                camera.BoundingRectangle.Left,
+                camera.BoundingRectangle.Right,
+                camera.BoundingRectangle.Bottom,
+                camera.BoundingRectangle.Top,
+            0, 1);
+
+            EffectTechnique effectTechnique = basicEffect.Techniques[0];
+            EffectPassCollection effectPassCollection = effectTechnique.Passes;
+            foreach (EffectPass pass in effectPassCollection)
+            {
+                pass.Apply();
+                gd.DrawUserPrimitives(PrimitiveType.LineStrip, verts, 0, 4);
+            }
+        }
 #endif
+        #endregion
 
     }
 }

@@ -36,11 +36,11 @@ namespace TopDownShooter.ECS.Engines
                         v.Direction = newDirection;
                     }
 
-                    x.Transform.TargetPosition = x.Transform.Position + (v.Direction * v.Speed * (int)gameTime.ElapsedGameTime.TotalMilliseconds);
+                    x.Transform.TargetPosition = x.Transform.Position + (v.Direction * v.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
                 else
                 {
-                    x.Transform.TargetPosition = x.Transform.Position + Vector2.Zero * 0 * (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+                    x.Transform.TargetPosition = x.Transform.Position + Vector2.Zero * 0 * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 }
 
                 if (x.Collider != null)

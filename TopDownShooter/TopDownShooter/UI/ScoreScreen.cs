@@ -5,20 +5,19 @@ using MonoGame.Extended.Gui;
 using MonoGame.Extended.Gui.Controls;
 using MonoGame.Extended.Gui.Markup;
 using TopDownShooter.Managers;
+using TopDownShooter.Services;
 
 namespace TopDownShooter.UI
 {
     public class ScoreScreen : IScreen
     {
         private readonly string markupPath = "UI\\Score.xml";
-        private readonly MessagingManager _messageManager;
         private readonly Guid _parentGuid;
 
         public Screen Screen { get; private set; }
 
-        public ScoreScreen(MessagingManager messagingManager)
+        public ScoreScreen()
         {
-            _messageManager = messagingManager;
             _parentGuid = Guid.NewGuid();
             LoadFromMarkup();
         }
@@ -36,7 +35,7 @@ namespace TopDownShooter.UI
 
         private void SetupEvents()
         {
-            _messageManager.Subscribe(
+            MessagingService.Subscribe(
                 EventType.Score, 
                 Constants.Score.PlayerScoreUpdated, 
                 (s, a) => {

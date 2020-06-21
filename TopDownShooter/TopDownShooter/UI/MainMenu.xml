@@ -8,6 +8,8 @@
   <StackPanel DockPanel.Dock="Top" Name="spButtons" Orientation="Vertical" HorizontalAlignment="Centre" Width="300">
     <Button Name="btnPlay" Content="Play" />
     <Label Height="25" />
+    <Button Name="btnPathfinder" Content="Pathfinding Test" />
+    <Label Height="25" />    
     <Button Name="btnQuit" Content="Quit" />
   </StackPanel>
 

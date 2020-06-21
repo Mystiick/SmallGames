@@ -58,7 +58,7 @@ namespace TopDownShooter.Tests.Managers.Engines
             var unit = new TransformEngine();
             var entity = new Entity(
                 new Transform() { Position = Vector2.Zero },
-                new Velocity() { Direction = new Vector2(5, 0), Speed = 1f }
+                new Velocity() { Direction = new Vector2(5, 0), Speed = 1000f }
             );
             var gameTime = new GameTime() { ElapsedGameTime = new System.TimeSpan(0, 0, 1) };
 

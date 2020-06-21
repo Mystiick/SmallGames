@@ -12,7 +12,7 @@ namespace TopDownShooter.ECS.Components.Templates
             {
                 Type = WeaponType.Single,
                 Range = 1,
-                ShotCooldown = 1f,
+                ShotCooldown = .3f,
                 BulletSpread = 2,
                 AmmoCapacity = 12,
                 CurrentAmmo = 12,
@@ -33,7 +33,7 @@ namespace TopDownShooter.ECS.Components.Templates
             {
                 Type = WeaponType.Automatic,
                 Range = 1,
-                ShotCooldown = .2f,
+                ShotCooldown = .1f,
                 BulletSpread = 5,
                 AmmoCapacity = 50,
                 CurrentAmmo = 50,
@@ -62,7 +62,7 @@ namespace TopDownShooter.ECS.Components.Templates
                 BulletsPerShot = 5,
                 Bullet = new Bullet()
                 {
-                    Damage = 5,
+                    Damage = 10,
                     Owner = owner,
                     OnBulletHit = DefaultBulletHit
                 }
