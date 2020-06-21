@@ -34,6 +34,7 @@ namespace TopDownShooter.ECS
 
         public virtual void Update(GameTime gameTime, List<Entity> allEntities)
         {
+            // TODO: Remove Linq
             var entitiesToRemove = this.Entities.Where(x => x.Expired).ToList();
 
             for (int i = 0; i < entitiesToRemove.Count; i++)

@@ -17,6 +17,8 @@ namespace TopDownShooter.ECS.Engines
 
         public override void Update(GameTime gameTime, List<Entity> allEntities)
         {
+            base.Update(gameTime, allEntities);
+
             var player = allEntities.FirstOrDefault(x => x.Name == Constants.Entities.Player);
 
             // Should only be one, but loop throug it anyway
