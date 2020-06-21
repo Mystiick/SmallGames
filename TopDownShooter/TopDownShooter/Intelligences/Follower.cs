@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using TopDownShooter.ECS;
 using TopDownShooter.ECS.Components;
+using TopDownShooter.ECS.Engines;
 using TopDownShooter.Managers;
 
 namespace TopDownShooter.Intelligences
@@ -16,8 +17,7 @@ namespace TopDownShooter.Intelligences
 
         public void Update(GameTime gameTime, List<Entity> allEntities)
         {
-            float distanceToPlayer = Vector2.Distance(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position);
-
+            float distanceToPlayer = Vector2.Distance(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position); 
             var v = CurrentEntity.GetComponent<Velocity>();
 
             if (v != null)
@@ -25,7 +25,7 @@ namespace TopDownShooter.Intelligences
                 // Only move the entity if it is over 50 units away from the player
                 if (distanceToPlayer > 50)
                 {
-                    MoveTowardPlayer(v);
+                    MoveTowardPlayer(v, allEntities);
                 }
                 else
                 {
@@ -40,35 +40,73 @@ namespace TopDownShooter.Intelligences
             }
         }
 
-        private void MoveTowardPlayer(Velocity v)
+        private void MoveTowardPlayer(Velocity v, List<Entity> allEntities)
         {
-            // Find my current Tile
-            Point p = new Point(
-                (int)(CurrentEntity.Transform.Position.X / Grid.TileWidth),
-                (int)(CurrentEntity.Transform.Position.Y / Grid.TileHeight)
-            );
-            Tile myTile = Grid.Tiles[p.X, p.Y];
-            Tile targetTile = myTile;
-
-            foreach (Tile t in myTile.Neighbors)
+            if (CanSeePlayer(allEntities))
             {
-                if (t.DistanceToPlayer < targetTile.DistanceToPlayer && t.CanTravelThrough)
+                // Find my current Tile
+                Point p = new Point(
+                    (int)(CurrentEntity.Transform.Position.X / Grid.TileWidth),
+                    (int)(CurrentEntity.Transform.Position.Y / Grid.TileHeight)
+                );
+                Tile myTile = Grid.Tiles[p.X, p.Y];
+                Tile targetTile = myTile;
+
+                foreach (Tile t in myTile.Neighbors)
                 {
-                    targetTile = t;
+                    if (t.DistanceToPlayer < targetTile.DistanceToPlayer && t.CanTravelThrough)
+                    {
+                        targetTile = t;
+                    }
+                }
+
+                // Adding half the tile width,height to the X,Y coords lets us line up the center of the sprite with the center of the tile
+                Vector2 targetPosition = new Vector2(targetTile.Location.X * Grid.TileWidth + (Grid.TileWidth / 2), targetTile.Location.Y * Grid.TileHeight + (Grid.TileHeight / 2));
+
+                // Need to subtract origin here, otherwise it tries to line up the top left corner with the center of the tile, causing it to get stuck on 1x1 gaps or corners
+                v.Direction = targetPosition - CurrentEntity.Transform.Position - CurrentEntity.Sprite.Origin;
+                v.Speed = 50;
+
+            }
+            else if (1 == 2 /*lastKnownPosition != Vector2.Zero*/)
+            {
+                // TODO: Move to last known location
+                // Need to calculate route for this, instead of just navigating tiles
+            }
+            else
+            {
+                v.Speed = 0;
+            }
+        }
+
+        private bool CanSeePlayer(List<Entity> allEntities)
+        {
+            // Get distance between NPC and player
+            float distance = Vector2.Distance(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position);
+            Vector2 direction = PlayerEntity.Transform.Position - CurrentEntity.Transform.Position;
+            direction.Normalize();
+
+            Entity[] collidedEntities;
+
+            // Shoot a ray toward the player
+            collidedEntities = PhysicsEngine.CastAll(CurrentEntity.Transform.Position, direction, distance, allEntities);
+
+            // If there are any "Wall" colliders hit, the NPC cannot see the player
+            foreach (Entity e in collidedEntities)
+            {
+                if (e.Name == "Wall")
+                {
+                    return false;
                 }
             }
-
-            // Adding half the tile width,height to the X,Y coords lets us line up the center of the sprite with the center of the tile
-            Vector2 targetPosition = new Vector2(targetTile.Location.X * Grid.TileWidth + (Grid.TileWidth / 2), targetTile.Location.Y * Grid.TileHeight + (Grid.TileHeight / 2));
-
-            // Need to subtract origin here, otherwise it tries to line up the top left corner with the center of the tile, causing it to get stuck on 1x1 gaps or corners
-            v.Direction = targetPosition - CurrentEntity.Transform.Position - CurrentEntity.Sprite.Origin;
-            v.Speed = 50;
+            
+            // Nothing is in the way, the NPC can see the player
+            return true;
         }
 
         private void ShootAtPlayer()
         {
-            //MessagingManager.SendMessage(
+            // TODO: 61
         }
     }
 }
