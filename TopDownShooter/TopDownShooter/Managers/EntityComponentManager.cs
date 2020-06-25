@@ -10,6 +10,7 @@ using TopDownShooter.ECS;
 using TopDownShooter.ECS.Components;
 using TopDownShooter.ECS.Engines;
 using TopDownShooter.Exceptions;
+using TopDownShooter.Services;
 
 namespace TopDownShooter.Managers
 {
@@ -18,6 +19,7 @@ namespace TopDownShooter.Managers
 
         private readonly List<Entity> _entities;
         private IOrderedEnumerable<Engine> _engines;
+        private readonly Guid _guid;
 
         public int EngineCount { get { return _engines.Count(); } }
         public ReadOnlyCollection<Entity> MyEntities { get => new ReadOnlyCollection<Entity>(_entities); }
@@ -26,6 +28,7 @@ namespace TopDownShooter.Managers
         {
             _entities = new List<Entity>();
             _engines = new List<Engine>().OrderBy(x => 0);
+            _guid = new Guid();
         }
 
         public void Init()
@@ -38,6 +41,8 @@ namespace TopDownShooter.Managers
             AddEngine(new TransformEngine(), i++);
             AddEngine(new PhysicsEngine(), i++);
             AddEngine(new IntelligenceEngine(), i++);
+
+            MessagingService.Subscribe(EventType.Spawn, OnMessageReceived, _guid);
         }
 
         public void AddEngine(Engine item, int processingOrder)
@@ -107,6 +112,14 @@ namespace TopDownShooter.Managers
         public void Clear()
         {
             _entities.Clear();
+        }
+
+        private void OnMessageReceived(object sender, object args) 
+        {
+            if (args is Entity)
+            {
+                this.AddEntity(args as Entity);
+            }
         }
     }
 }

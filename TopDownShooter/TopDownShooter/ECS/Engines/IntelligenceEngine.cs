@@ -34,11 +34,11 @@ namespace TopDownShooter.ECS.Engines
             // TODO: There just has to be a better way
             if (_playerEntity == null || _playerEntity.Expired)
             {
-                Entity _playerEntity = allEntities.FirstOrDefault(x => x.Name == Constants.Entities.Player);
+                _playerEntity = allEntities.FirstOrDefault(x => x.Name == Constants.Entities.Player);
             }
             if (_gridEntity == null || _playerEntity.Expired)
             {
-                Entity _gridEntity = allEntities.FirstOrDefault(x => x.HasComponent<TileGrid>());
+                _gridEntity = allEntities.FirstOrDefault(x => x.HasComponent<TileGrid>());
             }
             if (_gridEntity != null && _grid == null)
             {

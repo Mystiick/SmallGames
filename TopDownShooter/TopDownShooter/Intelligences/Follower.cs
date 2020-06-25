@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+
+using MonoGame.Extended;
+
 using TopDownShooter.ECS;
 using TopDownShooter.ECS.Components;
+using TopDownShooter.ECS.Components.Templates;
 using TopDownShooter.ECS.Engines;
 using TopDownShooter.Managers;
+using TopDownShooter.Services;
 
 namespace TopDownShooter.Intelligences
 {
@@ -83,10 +88,10 @@ namespace TopDownShooter.Intelligences
             // Shoot a ray toward the player
             collidedEntities = PhysicsEngine.CastAll(CurrentEntity.Transform.Position, direction, distance, allEntities);
 
-            // If there are any "Wall" colliders hit, the NPC cannot see the player
+            // If there are any Wall colliders hit, the NPC cannot see the player
             foreach (Entity e in collidedEntities)
             {
-                if (e.Name == "Wall")
+                if (e.Name == Constants.Entities.Wall)
                 {
                     return false;
                 }
@@ -98,7 +103,24 @@ namespace TopDownShooter.Intelligences
 
         private void ShootAtPlayer()
         {
-            // TODO: 61
+            var weapon = CurrentEntity.GetComponent<Weapon>();
+
+            if (weapon != null)
+            {
+                // Create bullet entity
+                Entity[] bullets = WeaponService.GetBullets(weapon, (PlayerEntity.Transform.Position - CurrentEntity.Transform.Position).NormalizedCopy());
+
+                for (int i = 0; i < bullets.Length; i++)
+                {
+                    MessagingService.SendMessage(EventType.Spawn, "SpawnBullet", CurrentEntity, bullets[i]);
+                }
+            }
+#if DEBUG 
+            else
+            {
+                Console.WriteLine($"Entity {CurrentEntity.ID} cannot shoot. They have no Weapon Component");
+            }
+#endif
         }
     }
 }

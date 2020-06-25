@@ -7,6 +7,7 @@ using TopDownShooter.Managers;
 using MonoGame.Extended.ViewportAdapters;
 using MonoGame.Extended.BitmapFonts;
 using TopDownShooter.Services;
+using System.Diagnostics.CodeAnalysis;
 
 namespace TopDownShooter
 {
@@ -36,7 +37,6 @@ namespace TopDownShooter
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             _parentGuid = Guid.NewGuid();
-            MessagingService.Init();
         }
 
         protected override void Initialize()
@@ -46,22 +46,12 @@ namespace TopDownShooter
 
         protected override void LoadContent()
         {
-            // Load Order:
-            // 1. Messaging Manager
-            //     This has no dependencies
-            // 2. Input Manager
-            //     This has no dependencies
-            // 3. Sprite Batch
-            //     The only dependency is the Graphics device, which is loaded by Monogame pre LoadContent
-            // 4. Content Manager
-            //     Dependent on the Messaging Manager
-            // 5. User Interface
-            // 6. State Manager
-            //     Dependent on Messaging Manager, Sprite Batch, ContentManager, InputManager, and UI
+            MessagingService.Init();
             _inputManager = new InputManager();
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             
             _contentManager = new ContentCacheManager(Content);
+            WeaponService.Init(_contentManager);
 
             SetupDefaultUi();
 

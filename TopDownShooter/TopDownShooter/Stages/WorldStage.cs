@@ -104,7 +104,7 @@ namespace TopDownShooter.Stages
 
         private void Shoot(GameTime gameTime, Weapon weapon, Entity owner)
         {
-            Entity[] bullets = _weaponManager.GetBullets(gameTime, weapon, InputManager.GetMousePosition() + this.Camera.Position - owner.Transform.Position);
+            Entity[] bullets = _weaponManager.GetBullets(weapon, InputManager.GetMousePosition() + this.Camera.Position - owner.Transform.Position);
 
             for (int i = 0; i < bullets.Length; i++)
             {
@@ -261,7 +261,7 @@ namespace TopDownShooter.Stages
                 new BoxCollider() { BoundingBox = new Rectangle(Point.Zero, size) },
             })
             {
-                Name = "Wall"
+                Name = Constants.Entities.Wall
             };
             entity.Transform.TargetPosition = entity.Transform.Position;
 
@@ -286,17 +286,18 @@ namespace TopDownShooter.Stages
                 foreach (TiledMapObject obj in enemySpawns)
                 {
                     TextureRegion2D sprite = ContentCache.GetClippedAsset(AssetName.Character_Orange_Pistol);
-                    Vector2 size = new Vector2(sprite.Width, sprite.Height);
-                    EnemyType et = Enum.Parse<EnemyType>(obj.Properties.First(x => x.Key == "enemy_type").Value);
+                    Point size = new Point(sprite.Width, sprite.Height);
+                    EnemyType et = Enum.Parse<EnemyType>(obj.Properties.First(x => x.Key == Constants.TileMap.Properties.EnemyType).Value);
 
                     Entity e = new Entity();
                     e.AddComponents(new Component[] {
                         new Transform() { Position = obj.Position },
-                        new Intelligence() { EnemyType = Enum.Parse<EnemyType>(obj.Properties.First(x => x.Key == "enemy_type").Value) },
+                        new Intelligence() { EnemyType = et },
                         new Health() { MaxHealth = 50 },
                         new Sprite() { Texture = sprite },
-                        new BoxCollider() { BoundingBox = new Rectangle(0, 0, (int)size.X, (int)size.Y) },
-                        new Velocity() { }
+                        new BoxCollider() { BoundingBox = new Rectangle(Point.Zero, size) },
+                        new Velocity() { },
+                        WeaponTemplates.AssaultRifle(e)
                     });
                     e.Name = $"Enemy-{et}";
                     e.Transform.Position -= new Vector2(0, _map.TileHeight); // TODO: Need a better solution than this
