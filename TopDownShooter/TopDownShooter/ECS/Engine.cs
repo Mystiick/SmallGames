@@ -32,13 +32,20 @@ namespace TopDownShooter.ECS
             Entities.Add(entity);
         }
 
+        /// <param name="allEntities">All of the entities in the game</param>
         public virtual void Update(GameTime gameTime, List<Entity> allEntities)
         {
-            // TODO: Remove Linq
-            var entitiesToRemove = this.Entities.Where(x => x.Expired).ToList();
+            var entitiesToRemove = new List<Entity>();
 
-            for (int i = 0; i < entitiesToRemove.Count; i++)
-            {
+            for (int i = 0; i < this.Entities.Count(); i++) {
+                var e = this.Entities[i];
+
+                if (e.Expired) {
+                    entitiesToRemove.Add(e);
+                }
+            }
+
+            for (int i = 0; i < entitiesToRemove.Count(); i++) {
                 var e = entitiesToRemove[i];
                 this.Entities.Remove(e);
             }
