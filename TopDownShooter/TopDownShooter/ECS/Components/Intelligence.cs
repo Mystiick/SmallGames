@@ -8,6 +8,6 @@ namespace TopDownShooter.ECS.Components
     public class Intelligence : Component
     {
         public EnemyType EnemyType { get; set; }
-        public IImplementation Implementation { get; set; }
+        public BaseIntelligence Implementation { get; set; }
     }
 }

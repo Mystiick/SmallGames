@@ -7,13 +7,9 @@ using TopDownShooter.ECS.Components;
 
 namespace TopDownShooter.Intelligences
 {
-    public class Dummy : IImplementation
+    public class Dummy : BaseIntelligence
     {
-        public Entity CurrentEntity { get; set; }
-        public Entity PlayerEntity { get; set; }
-        public TileGrid Grid { get; set; }
-
-        public void Update(GameTime gameTime, List<Entity> allEntities)
+        public override void Update(GameTime gameTime, List<Entity> allEntities)
         {
             CurrentEntity.Transform.Rotation += .1f;
         }

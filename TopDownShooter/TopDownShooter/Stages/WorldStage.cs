@@ -297,7 +297,7 @@ namespace TopDownShooter.Stages
                         new Sprite() { Texture = sprite },
                         new BoxCollider() { BoundingBox = new Rectangle(Point.Zero, size) },
                         new Velocity() { },
-                        WeaponTemplates.AssaultRifle(e)
+                        WeaponTemplates.Pistol(e)
                     });
                     e.Name = $"Enemy-{et}";
                     e.Transform.Position -= new Vector2(0, _map.TileHeight); // TODO: Need a better solution than this

@@ -11,7 +11,7 @@ namespace TopDownShooter.ECS.Engines
     {
         public override Type[] RequiredComponents => new Type[] { typeof(Transform), typeof(Health), typeof(Intelligence) };
 
-        private Dictionary<EnemyType, IImplementation> _implementations;
+        private Dictionary<EnemyType, BaseIntelligence> _implementations;
         private Entity _playerEntity, _gridEntity;
         private TileGrid _grid;
 
@@ -20,7 +20,7 @@ namespace TopDownShooter.ECS.Engines
             base.Start();
 
             // Build out instance pool for Intelligence implementations
-            _implementations = new Dictionary<EnemyType, IImplementation>();
+            _implementations = new Dictionary<EnemyType, BaseIntelligence>();
             _implementations.Add(EnemyType.None, null);
             _implementations.Add(EnemyType.Dummy, new Dummy());
             _implementations.Add(EnemyType.Turret, new Turret());
