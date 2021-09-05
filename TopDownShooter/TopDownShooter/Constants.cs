@@ -1,4 +1,6 @@
-﻿namespace TopDownShooter
+﻿using Microsoft.Xna.Framework;
+
+namespace TopDownShooter
 {
     public struct Constants
     {
@@ -38,6 +40,11 @@
         public struct Entities
         {
             public const string Player = "Player";
+            public const string Wall = "Wall";
+
+            public const string Bullet = "Bullet";
+            public const float BulletBaseSpeed = 500f;
+            public static readonly Rectangle BulletCollider = new Rectangle(1, 0, 1, 1);
         }
 
     }

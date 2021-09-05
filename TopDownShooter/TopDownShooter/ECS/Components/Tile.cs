@@ -8,10 +8,10 @@ namespace TopDownShooter.ECS.Components
 {
     public class TileGrid : Component
     {
-        public Tile[,] Tiles;
-        public int TileWidth;
-        public int TileHeight;
-        public Point MapSize;
+        public Tile[,] Tiles { get; set; }
+        public int TileWidth { get; set; }
+        public int TileHeight { get; set; }
+        public Point MapSize { get; set; }
 
         public void Reset()
         {
@@ -22,6 +22,7 @@ namespace TopDownShooter.ECS.Components
         }
 
 #if DEBUG
+        #region | DEBUG |
         public void PrintDebugGrid()
         {
             if (Debugger.ShowDebugInfo)
@@ -52,22 +53,23 @@ namespace TopDownShooter.ECS.Components
                 }
             }
         }
+        #endregion
 #endif
 
     }
 
     public class Tile
     {
-        public int DistanceToPlayer;
-        public bool Visited;
-        public bool CanTravelThrough; // If false, it is a collider, and should be ignored
-        public Point Location;
+        public int DistanceToPlayer { get; set; }
+        public bool Visited { get; set; }
+        public bool CanTravelThrough { get; set; } // If false, it is a collider, and should be ignored
+        public Point Location { get; set; }
 
-        public Tile North;
-        public Tile South;
-        public Tile East;
-        public Tile West;
-        public Tile[] Neighbors;
+        public Tile North { get; set; }
+        public Tile South { get; set; }
+        public Tile East { get; set; }
+        public Tile West { get; set; }
+        public Tile[] Neighbors { get; set; }
 
         private const int default_distance = -1;
 

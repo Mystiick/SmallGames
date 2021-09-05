@@ -28,7 +28,7 @@ namespace TopDownShooter.ECS.Managers
                 new BoxCollider() { BoundingBox = new Rectangle(0, 0, 10, 10) },
                 new Sprite(),
                 new Velocity(),
-                new Health() { MaxHealth = 3, CurrentHealth = 3 }
+                new Health() { MaxHealth = 100, CurrentHealth = 100 }
             ) {
                 Name = Constants.Entities.Player,
             };

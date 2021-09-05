@@ -25,7 +25,7 @@ namespace TopDownShooter.Tests.Managers
             var gameTime = new GameTime() { ElapsedGameTime = new System.TimeSpan(0, 0, 1) };
 
             // Act
-            output = unit.GetBullets(gameTime, weapon, Vector2.One);
+            output = unit.GetBullets(weapon, Vector2.One);
 
             // Assert
             Assert.IsNotNull(output);

@@ -7,18 +7,11 @@ using TopDownShooter.ECS.Components;
 
 namespace TopDownShooter.Intelligences
 {
-    public class Turret : IImplementation
+    public class Turret : BaseIntelligence
     {
-        public Entity CurrentEntity { get; set; }
-        public Entity PlayerEntity { get; set; }
-        public TileGrid Grid { get; set; }
-
-        public void Update(GameTime gameTime, List<Entity> allEntities)
+        public override void Update(GameTime gameTime, List<Entity> allEntities)
         {
-            if (CurrentEntity != null && PlayerEntity != null)
-            {
-                CurrentEntity.Transform.Rotation = Helpers.DetermineAngle(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position);
-            }
+            base.Update(gameTime, allEntities);
         }
     }
 }

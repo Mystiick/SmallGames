@@ -12,6 +12,8 @@ namespace TopDownShooter.ECS.Engines
 
         public override void Update(GameTime gameTime, List<Entity> allEntities)
         {
+            base.Update(gameTime, allEntities);
+
             for (int i = 0; i < this.Entities.Count; i++)
             {
                 var x = this.Entities[i];

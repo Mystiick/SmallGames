@@ -72,12 +72,27 @@ namespace TopDownShooter.ECS
 
         public T GetComponent<T>() where T : Component
         {
-            return (T)_components.FirstOrDefault(x => x.GetType() == typeof(T));
+            for(int i = 0; i < _components.Count(); i++)
+            {
+                if (_components[i].GetType() == typeof(T))
+                {
+                    return (T)_components[i];
+                }
+            }
+
+            return null;
         }
 
         public bool HasComponent(Type t)
         {
-            return _components.Any(x => x.GetType() == t);
+            for(int i = 0; i < _components.Count(); i++)
+            {
+                if (_components[i].GetType() == t)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public bool HasComponent<T>() where T : Component

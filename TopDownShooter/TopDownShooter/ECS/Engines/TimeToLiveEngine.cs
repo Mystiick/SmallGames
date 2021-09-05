@@ -28,6 +28,7 @@ namespace TopDownShooter.ECS.Engines
 
             // DO THIS LAST
             // Typically this would be done first, but for the TTL Engine, the Marked For Removals need to be determined first
+            // If this is called first, any entities that are expired will hang around until the next frame and wouldn't be the end of the world
             base.Update(gameTime, allEntities);
         }
     }
