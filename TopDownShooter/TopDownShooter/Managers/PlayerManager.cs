@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+
 using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
+
 using TopDownShooter.ECS;
 using TopDownShooter.ECS.Components;
 using TopDownShooter.Interfaces;
 using TopDownShooter.Managers;
+using TopDownShooter.Services;
 
 namespace TopDownShooter.ECS.Managers
 {
@@ -31,6 +34,7 @@ namespace TopDownShooter.ECS.Managers
                 new Health() { MaxHealth = 100, CurrentHealth = 100 }
             ) {
                 Name = Constants.Entities.Player,
+                Type = EntityType.Player
             };
         }
 
@@ -91,11 +95,13 @@ namespace TopDownShooter.ECS.Managers
             if (InputManager.IsKeyDown(KeyBinding.ZoomIn))
             {
                 this.Camera.Zoom *= 1 + (float)gameTime.ElapsedGameTime.TotalSeconds;
+                MessagingService.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, this.Camera.Zoom);
             }
 
             if (InputManager.IsKeyDown(KeyBinding.ZoomOut))
             {
                 this.Camera.Zoom /= 1 + (float)gameTime.ElapsedGameTime.TotalSeconds;
+                MessagingService.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, this.Camera.Zoom);
             }
 
             PlayerEntity.Transform.Rotation = Helpers.DetermineAngle(PlayerEntity.Transform.Position, InputManager.GetMousePosition() + this.Camera.Position);

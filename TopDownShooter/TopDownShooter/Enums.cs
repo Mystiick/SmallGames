@@ -91,4 +91,13 @@ namespace TopDownShooter
         Automatic,
         Shotgun
     }
+
+    public enum EntityType 
+    {
+        Unassigned,
+        Player,
+        Wall,
+        Enemy,
+        Pickup,
+    }
 }

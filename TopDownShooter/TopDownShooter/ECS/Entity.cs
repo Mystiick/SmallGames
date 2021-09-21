@@ -16,6 +16,7 @@ namespace TopDownShooter.ECS
         public Guid ID { get; private set; }
         public bool Expired { get; set; }
         public string Name { get; set; }
+        public EntityType Type { get; set; }
         public int ComponentCount { get { return _components.Count; } }
 
         private List<Component> _components;

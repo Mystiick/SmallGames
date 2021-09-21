@@ -72,8 +72,6 @@ namespace TopDownShooter.Stages
             Vector2 cameraCenter = this.Camera.Position + this.Camera.Origin;
             this.Camera.LookAt(Vector2.Lerp(cameraCenter, _player.PlayerEntity.Transform.Position, 0.1f));
 
-            MessagingService.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, this.Camera.Zoom);
-
             this._mapRenderer.Update(gameTime);
         }
 
@@ -289,17 +287,20 @@ namespace TopDownShooter.Stages
                     Point size = new Point(sprite.Width, sprite.Height);
                     EnemyType et = Enum.Parse<EnemyType>(obj.Properties.First(x => x.Key == Constants.TileMap.Properties.EnemyType).Value);
 
-                    Entity e = new Entity();
+                    Entity e = new Entity()
+                    {
+                        Name = $"Enemy-{et}",
+                        Type = EntityType.Enemy
+                    };
                     e.AddComponents(new Component[] {
                         new Transform() { Position = obj.Position },
                         new Intelligence() { EnemyType = et },
-                        new Health() { MaxHealth = 50 },
+                        new Health() { MaxHealth = 50 }, // TODO: Get from map's definition
                         new Sprite() { Texture = sprite },
                         new BoxCollider() { BoundingBox = new Rectangle(Point.Zero, size) },
                         new Velocity() { },
-                        WeaponTemplates.Pistol(e)
+                        WeaponTemplates.Pistol(e) // TODO: Get weapon type from map's definition
                     });
-                    e.Name = $"Enemy-{et}";
                     e.Transform.Position -= new Vector2(0, _map.TileHeight); // TODO: Need a better solution than this
 
                     EntityComponentManager.AddEntity(e);

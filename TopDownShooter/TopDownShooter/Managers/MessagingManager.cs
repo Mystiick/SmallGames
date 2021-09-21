@@ -29,6 +29,8 @@ namespace TopDownShooter.Managers
         /// <returns></returns>
         public Subscription Subscribe(EventType eventType, Action<object, object> handler, Guid callerID)
         {
+            Console.WriteLine($"Subscribing to {eventType} | null | {callerID}");
+
             var output = new Subscription(Guid.NewGuid(), eventType, handler, callerID);
             _subscriptions.Add(output);
 
@@ -37,6 +39,8 @@ namespace TopDownShooter.Managers
 
         public Subscription Subscribe(EventType eventType, string eventName, Action<object, object> handler, Guid callerID)
         {
+            Console.WriteLine($"Subscribing to {eventType} | {eventName} | {callerID}");
+
             var output = new Subscription(Guid.NewGuid(), eventType, eventName, handler, callerID);
             _subscriptions.Add(output);
 
@@ -82,6 +86,7 @@ namespace TopDownShooter.Managers
 
             foreach (var sub in subscriptions)
             {
+                Console.WriteLine($"Sending message to {sub.ParentID}");
                 sub.Handler.Invoke(sender, args);
             }
         }

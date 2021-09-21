@@ -19,7 +19,7 @@ namespace TopDownShooter.ECS.Engines
         {
             base.Update(gameTime, allEntities);
 
-            var player = allEntities.FirstOrDefault(x => x.Name == Constants.Entities.Player);
+            var player = allEntities.FirstOrDefault(x => x.Type == EntityType.Player);
 
             // Should only be one, but loop throug it anyway
             for (int i = 0; i < this.Entities.Count; i++)

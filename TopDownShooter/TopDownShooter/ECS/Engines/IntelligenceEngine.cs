@@ -1,9 +1,10 @@
-﻿using System    ;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using TopDownShooter.ECS.Components;
 using TopDownShooter.Intelligences;
+using TopDownShooter.Services;
 
 namespace TopDownShooter.ECS.Engines
 {
@@ -34,7 +35,7 @@ namespace TopDownShooter.ECS.Engines
             // TODO: There just has to be a better way
             if (_playerEntity == null || _playerEntity.Expired)
             {
-                _playerEntity = allEntities.FirstOrDefault(x => x.Name == Constants.Entities.Player);
+                _playerEntity = allEntities.FirstOrDefault(x => x.Type == EntityType.Player);
             }
             if (_gridEntity == null || _playerEntity.Expired)
             {
@@ -69,9 +70,14 @@ namespace TopDownShooter.ECS.Engines
             var intel = entity.GetComponent<Intelligence>();
             intel.Implementation = _implementations[intel.EnemyType];
 
-            if (entity.Name == Constants.Entities.Player)
+            switch (entity.Type)
             {
-                _playerEntity = entity;
+                case EntityType.Player:
+                    _playerEntity = entity;
+                    break;
+                case EntityType.Enemy:
+                    MessagingService.SendMessage(EventType.Score, Constants.Score.EnemyCountUpdated, entity, this.Entities.Count(x => x.Type == EntityType.Enemy));
+                    break;
             }
 
             if (entity.HasComponent<TileGrid>())

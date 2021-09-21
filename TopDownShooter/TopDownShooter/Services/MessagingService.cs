@@ -68,6 +68,9 @@ namespace TopDownShooter.Services
 
         public static void SendMessage(EventType eventType, string eventName, object sender, object args)
         {
+#if DEBUG
+            Console.WriteLine($"Sending message: {eventType} | {eventName} | {args}");
+#endif
             Instance.SendMessage(eventType, eventName, sender, args);
         }
     }

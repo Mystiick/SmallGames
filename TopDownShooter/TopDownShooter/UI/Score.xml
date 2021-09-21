@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <DockPanel LastChildFill="False">
   <Label DockPanel.Dock="Top" Name="lblScore" Content="Score" />
+  <Label DockPanel.Dock="Top" Name="lblEnemies" Content="Enemies Remaining" />
 </DockPanel>
