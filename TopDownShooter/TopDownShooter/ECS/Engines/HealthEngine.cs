@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+
 using Microsoft.Xna.Framework;
+
 using TopDownShooter.ECS.Components;
+using TopDownShooter.Services;
 
 namespace TopDownShooter.ECS.Engines
 {
@@ -22,6 +25,11 @@ namespace TopDownShooter.ECS.Engines
                 if (h.CurrentHealth <= 0)
                 {
                     x.Expired = true;
+
+                    if (x.Type == EntityType.Enemy)
+                    {
+                        MessagingService.SendMessage(EventType.GameEvent, Constants.GameEvent.EnemyKilled, x);
+                    }
                 }
             }
         }

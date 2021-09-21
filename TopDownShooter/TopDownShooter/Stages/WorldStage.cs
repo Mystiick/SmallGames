@@ -52,10 +52,14 @@ namespace TopDownShooter.Stages
             MessagingService.SendMessage(EventType.UserInterface, Constants.UserInterface.SetActive, this, ScreenName.Score);
             MessagingService.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, 0);
 
+            // Get list of enemies in the Intelligence engine
+            var enemyCount = this.EntityComponentManager.GetEngine<IntelligenceEngine>().MyEntities.Count(x => x.Type == EntityType.Enemy);
+            MessagingService.SendMessage(EventType.Score, Constants.Score.EnemyCountUpdated, this, enemyCount);
+
             _player.InputManager = this.InputManager;
             _player.Camera = this.Camera;
             _tileEngine = this.EntityComponentManager.GetEngine<TileEngine>();
-
+            
             this.EntityComponentManager.AddEntity(
                 new Entity(_tileEngine.BuildTileGrid(_map))
             );

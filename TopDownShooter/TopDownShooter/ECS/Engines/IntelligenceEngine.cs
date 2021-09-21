@@ -26,6 +26,8 @@ namespace TopDownShooter.ECS.Engines
             _implementations.Add(EnemyType.Dummy, new Dummy());
             _implementations.Add(EnemyType.Turret, new Turret());
             _implementations.Add(EnemyType.Follower, new Follower());
+
+            MessagingService.Subscribe(EventType.GameEvent, (s,a) => { UpdateEnemyCount(); }, this.ID);
         }
 
         public override void Update(GameTime gameTime, List<Entity> allEntities)
@@ -76,7 +78,7 @@ namespace TopDownShooter.ECS.Engines
                     _playerEntity = entity;
                     break;
                 case EntityType.Enemy:
-                    MessagingService.SendMessage(EventType.Score, Constants.Score.EnemyCountUpdated, entity, this.Entities.Count(x => x.Type == EntityType.Enemy));
+                    UpdateEnemyCount();
                     break;
             }
 
@@ -84,6 +86,11 @@ namespace TopDownShooter.ECS.Engines
             {
                 _gridEntity = entity;
             }
+        }
+
+        public void UpdateEnemyCount()
+        {
+            MessagingService.SendMessage(EventType.Score, Constants.Score.EnemyCountUpdated, this, this.Entities.Count(x => x.Type == EntityType.Enemy && !x.Expired));
         }
     }
 }

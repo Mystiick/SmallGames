@@ -34,7 +34,8 @@ namespace TopDownShooter
         UserInterface,
         Score,
         LoadMap,
-        Spawn
+        Spawn,
+        GameEvent
     }
 
     public enum KeyBinding

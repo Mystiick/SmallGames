@@ -17,9 +17,12 @@ namespace TopDownShooter.ECS
         public int ProcessingOrder { get; set; }
         public ReadOnlyCollection<Entity> MyEntities { get => new ReadOnlyCollection<Entity>(this.Entities); }
 
+        public Guid ID { get; }
+
         protected Engine()
         {
             Entities = new List<Entity>();
+            this.ID = new Guid();
         }
 
         public virtual void Start()

@@ -66,7 +66,7 @@ namespace TopDownShooter.Services
             return Instance.UnsubscribeParent(parentID);
         }
 
-        public static void SendMessage(EventType eventType, string eventName, object sender, object args)
+        public static void SendMessage(EventType eventType, string eventName, object sender, object args = null)
         {
 #if DEBUG
             Console.WriteLine($"Sending message: {eventType} | {eventName} | {args}");
