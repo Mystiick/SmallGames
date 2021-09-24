@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TopDownShooter.ECS.Managers;
-using TopDownShooter.ECS.Components;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended.TextureAtlases;
-using TopDownShooter.Managers;
-using Moq;
 using Microsoft.Xna.Framework;
+
+using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended;
-using MonoGame.Extended.ViewportAdapters;
-using TopDownShooter.Interfaces;
+
+using TopDownShooter.ECS.Components;
+using TopDownShooter.Managers;
 
 namespace TopDownShooter.Tests.Managers
 {
