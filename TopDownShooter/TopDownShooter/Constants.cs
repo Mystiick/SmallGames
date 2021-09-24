@@ -18,6 +18,13 @@ namespace TopDownShooter
         public struct Score
         {
             public const string PlayerScoreUpdated = "Score.PlayerScoreUpdated";
+            public const string EnemyCountUpdated = "Score.EnemyCountUpdated";
+        }
+
+        public struct GameEvent
+        {
+            public const string EnemyKilled = "GameEvent.EnemyKilled";
+            public const string PlayerKilled = "GameEvent.PlayerKilled";
         }
 
         public struct TileMap

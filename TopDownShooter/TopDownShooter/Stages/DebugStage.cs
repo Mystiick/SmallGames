@@ -2,13 +2,10 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
-using MonoGame.Extended.TextureAtlases;
+
 using TopDownShooter.ECS;
 using TopDownShooter.ECS.Components;
-using TopDownShooter.ECS.Managers;
 using TopDownShooter.Managers;
-using MonoGame.Extended.Tiled;
 using TopDownShooter.Services;
 
 namespace TopDownShooter.Stages

@@ -38,9 +38,18 @@ namespace TopDownShooter.UI
             MessagingService.Subscribe(
                 EventType.Score, 
                 Constants.Score.PlayerScoreUpdated, 
-                (s, a) => {
-                    Screen.FindControl<Label>("lblScore").Content = $"Score: {a}";
+                (sender, args) => {
+                    Screen.FindControl<Label>("lblScore").Content = $"Score: {args}";
                 }, 
+                _parentGuid
+            );
+
+            MessagingService.Subscribe(
+                EventType.Score,
+                Constants.Score.EnemyCountUpdated,
+                (sender, args) => {
+                    Screen.FindControl<Label>("lblEnemies").Content = $"Enemies Remaining: {args}";
+                },
                 _parentGuid
             );
         }

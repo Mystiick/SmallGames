@@ -23,6 +23,10 @@ namespace TopDownShooter.Managers
 
         public int EngineCount { get { return _engines.Count(); } }
         public ReadOnlyCollection<Entity> MyEntities { get => new ReadOnlyCollection<Entity>(_entities); }
+        
+        // Common entities
+        public Entity PlayerEntity { get; private set; }
+        public Entity WorldTileGrid { get; private set; }
 
         public EntityComponentManager()
         {
@@ -52,6 +56,7 @@ namespace TopDownShooter.Managers
                 throw new DuplicateEngineProcessingOrderException(processingOrder);
             }
 
+            item.ParentEntityComponentManager = this;
             item.ProcessingOrder = processingOrder;
             item.Start();
             _engines = _engines.Concat(new Engine[] {item}).OrderBy(x => x.ProcessingOrder);
@@ -74,6 +79,16 @@ namespace TopDownShooter.Managers
                 e.AddEntity(item);
             }
 
+            switch (item.Type)
+            {
+                case EntityType.Player:
+                    Console.WriteLine($"Updating Player Entity: {item.ID}");
+                    this.PlayerEntity = item;
+                    break;
+                case EntityType.TileGrid:
+                    this.WorldTileGrid = item;
+                    break;
+            }
         }
 
         public void Update(GameTime gameTime)
@@ -111,7 +126,18 @@ namespace TopDownShooter.Managers
         /// </summary>
         public void Clear()
         {
+            // Expire all entities, some places hold onto their own references they don't need to lookup forever
+            // If the entity doesn't get expired, then it will hold onto the old refernce, even though _entities is being cleared
+            foreach (Entity ent in _entities)
+            {
+                ent.Expired = true;
+            }
             _entities.Clear();
+
+            foreach (Engine eng in _engines)
+            {
+                eng.ClearEntities();
+            }
         }
 
         private void OnMessageReceived(object sender, object args) 

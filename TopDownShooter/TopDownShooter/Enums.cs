@@ -34,7 +34,8 @@ namespace TopDownShooter
         UserInterface,
         Score,
         LoadMap,
-        Spawn
+        Spawn,
+        GameEvent
     }
 
     public enum KeyBinding
@@ -90,5 +91,15 @@ namespace TopDownShooter
         Single,
         Automatic,
         Shotgun
+    }
+
+    public enum EntityType 
+    {
+        Unassigned,
+        Player,
+        Wall,
+        Enemy,
+        Pickup,
+        TileGrid,
     }
 }

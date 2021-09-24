@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+
 using Microsoft.Xna.Framework;
+
 using TopDownShooter.ECS.Components;
+using TopDownShooter.Services;
 
 namespace TopDownShooter.ECS.Engines
 {
@@ -16,12 +19,22 @@ namespace TopDownShooter.ECS.Engines
 
             for (int i = 0; i < this.Entities.Count; i++)
             {
-                var x = this.Entities[i];
-                var h = x.GetComponent<Health>();
+                var e = this.Entities[i];
+                var h = e.GetComponent<Health>();
 
                 if (h.CurrentHealth <= 0)
                 {
-                    x.Expired = true;
+                    e.Expired = true;
+
+                    switch (e.Type)
+                    {
+                        case EntityType.Enemy:
+                            MessagingService.SendMessage(EventType.GameEvent, Constants.GameEvent.EnemyKilled, e);
+                            break;
+                        case EntityType.Player:
+                            MessagingService.SendMessage(EventType.GameEvent, Constants.GameEvent.PlayerKilled, e);
+                            break;
+                    }
                 }
             }
         }

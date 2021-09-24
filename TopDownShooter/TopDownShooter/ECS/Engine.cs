@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+
 using MonoGame.Extended;
+
+using TopDownShooter.Managers;
 
 namespace TopDownShooter.ECS
 {
@@ -16,10 +19,14 @@ namespace TopDownShooter.ECS
         public abstract Type[] RequiredComponents { get; }
         public int ProcessingOrder { get; set; }
         public ReadOnlyCollection<Entity> MyEntities { get => new ReadOnlyCollection<Entity>(this.Entities); }
+        public EntityComponentManager ParentEntityComponentManager { get; set; }
+
+        public Guid ID { get; }
 
         protected Engine()
         {
             Entities = new List<Entity>();
+            this.ID = new Guid();
         }
 
         public virtual void Start()
@@ -49,6 +56,11 @@ namespace TopDownShooter.ECS
                 var e = entitiesToRemove[i];
                 this.Entities.Remove(e);
             }
+        }
+
+        public virtual void ClearEntities()
+        {
+            this.Entities.Clear();
         }
 
         public virtual void Draw(SpriteBatch sb, GraphicsDevice gd, OrthographicCamera camera)

@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using TopDownShooter.ECS.Managers;
-using TopDownShooter.Managers;
+
 using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
+using MonoGame.Extended.TextureAtlases;
+
 using TopDownShooter.ECS;
 using TopDownShooter.ECS.Components;
-using MonoGame.Extended;
 using TopDownShooter.ECS.Components.Templates;
-using MonoGame.Extended.TextureAtlases;
 using TopDownShooter.ECS.Engines;
+using TopDownShooter.Managers;
 using TopDownShooter.Services;
 
 namespace TopDownShooter.Stages
@@ -51,14 +52,14 @@ namespace TopDownShooter.Stages
             base.Start();
             MessagingService.SendMessage(EventType.UserInterface, Constants.UserInterface.SetActive, this, ScreenName.Score);
             MessagingService.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, 0);
+            var enemyCount = this.EntityComponentManager.GetEngine<IntelligenceEngine>().MyEntities.Count(x => x.Type == EntityType.Enemy);
+            MessagingService.SendMessage(EventType.Score, Constants.Score.EnemyCountUpdated, this, enemyCount);
+
+            MessagingService.Subscribe(EventType.GameEvent, Constants.GameEvent.PlayerKilled, (s, a) => { ResetMap(); }, this.StageID);
 
             _player.InputManager = this.InputManager;
             _player.Camera = this.Camera;
-            _tileEngine = this.EntityComponentManager.GetEngine<TileEngine>();
-
-            this.EntityComponentManager.AddEntity(
-                new Entity(_tileEngine.BuildTileGrid(_map))
-            );
+            
         }
 
         public override void Update(GameTime gameTime)
@@ -71,8 +72,6 @@ namespace TopDownShooter.Stages
             // Lerp camera to player
             Vector2 cameraCenter = this.Camera.Position + this.Camera.Origin;
             this.Camera.LookAt(Vector2.Lerp(cameraCenter, _player.PlayerEntity.Transform.Position, 0.1f));
-
-            MessagingService.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, this.Camera.Zoom);
 
             this._mapRenderer.Update(gameTime);
         }
@@ -139,8 +138,15 @@ namespace TopDownShooter.Stages
 
         private void InitNewMap()
         {
-            // Clear current map
-            EntityComponentManager.Clear();
+            Console.WriteLine("Setting up new map");
+
+            // Clear current stage
+            this.EntityComponentManager.Clear();
+
+            _tileEngine = this.EntityComponentManager.GetEngine<TileEngine>();
+            this.EntityComponentManager.AddEntity(
+                new Entity(_tileEngine.BuildTileGrid(_map)) { Type = EntityType.TileGrid }
+            );
 
             // Setup player
             SetupPlayerSpawn();
@@ -160,6 +166,19 @@ namespace TopDownShooter.Stages
             EntityComponentManager.AddEntity(_player.PlayerEntity);
         }
 
+        private void ResetMap()
+        {
+            _player = new PlayerManager()
+            {
+                InputManager = this.InputManager,
+                Camera = this.Camera
+            };
+
+            _player.SetSprite(ContentCache.GetClippedAsset(AssetName.Character_Brown_Idle));
+
+            InitNewMap();
+        }
+
         #region | Wall Colliders |
         private void CreateColliders()
         {
@@ -176,7 +195,7 @@ namespace TopDownShooter.Stages
             // This tracks if a tile has a collider that accounts for it already.
             // It is used to prevent smaller colliders from generating like: [ [ [ [ [ [ [ ]
             bool[,] colliderCreated = new bool[_map.Width, _map.Height];
-            
+
             for (ushort y = 0; y < layer.Height; y++)
             {
                 for (ushort x = 0; x < layer.Width; x++)
@@ -289,17 +308,20 @@ namespace TopDownShooter.Stages
                     Point size = new Point(sprite.Width, sprite.Height);
                     EnemyType et = Enum.Parse<EnemyType>(obj.Properties.First(x => x.Key == Constants.TileMap.Properties.EnemyType).Value);
 
-                    Entity e = new Entity();
+                    Entity e = new Entity()
+                    {
+                        Name = $"Enemy-{et}",
+                        Type = EntityType.Enemy
+                    };
                     e.AddComponents(new Component[] {
                         new Transform() { Position = obj.Position },
                         new Intelligence() { EnemyType = et },
-                        new Health() { MaxHealth = 50 },
+                        new Health() { MaxHealth = 50 }, // TODO: Get from map's definition
                         new Sprite() { Texture = sprite },
                         new BoxCollider() { BoundingBox = new Rectangle(Point.Zero, size) },
                         new Velocity() { },
-                        WeaponTemplates.Pistol(e)
+                        WeaponTemplates.Pistol(e) // TODO: Get weapon type from map's definition
                     });
-                    e.Name = $"Enemy-{et}";
                     e.Transform.Position -= new Vector2(0, _map.TileHeight); // TODO: Need a better solution than this
 
                     EntityComponentManager.AddEntity(e);

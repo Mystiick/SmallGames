@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="40" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="10">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="40" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="21">
  <tileset firstgid="1" source="TopDownShooter.tsx"/>
  <layer id="1" name="Terrain" width="40" height="40">
   <data encoding="csv">
@@ -98,7 +98,62 @@
     <property name="enemy_type" value="Turret"/>
    </properties>
   </object>
-  <object id="9" name="dummy" gid="99" x="401.667" y="401.333" width="16" height="16">
+  <object id="9" name="follower" gid="99" x="372.679" y="564.826" width="16" height="16">
+   <properties>
+    <property name="enemy_type" value="Follower"/>
+   </properties>
+  </object>
+  <object id="10" name="follower" gid="99" x="208.026" y="305.092" width="16" height="16">
+   <properties>
+    <property name="enemy_type" value="Follower"/>
+   </properties>
+  </object>
+  <object id="11" name="follower" gid="99" x="90.1731" y="313.189" width="16" height="16">
+   <properties>
+    <property name="enemy_type" value="Follower"/>
+   </properties>
+  </object>
+  <object id="12" name="follower" gid="99" x="79.3509" y="115.296" width="16" height="16">
+   <properties>
+    <property name="enemy_type" value="Follower"/>
+   </properties>
+  </object>
+  <object id="13" name="follower" gid="99" x="114.137" y="143.511" width="16" height="16">
+   <properties>
+    <property name="enemy_type" value="Follower"/>
+   </properties>
+  </object>
+  <object id="14" name="follower" gid="99" x="105.247" y="213.856" width="16" height="16">
+   <properties>
+    <property name="enemy_type" value="Follower"/>
+   </properties>
+  </object>
+  <object id="15" name="follower" gid="99" x="212.31" y="215.015" width="16" height="16">
+   <properties>
+    <property name="enemy_type" value="Follower"/>
+   </properties>
+  </object>
+  <object id="16" name="follower" gid="99" x="180.23" y="126.891" width="16" height="16">
+   <properties>
+    <property name="enemy_type" value="Follower"/>
+   </properties>
+  </object>
+  <object id="17" name="follower" gid="99" x="387.398" y="83.989" width="16" height="16">
+   <properties>
+    <property name="enemy_type" value="Follower"/>
+   </properties>
+  </object>
+  <object id="18" name="follower" gid="99" x="538.523" y="78.9644" width="16" height="16">
+   <properties>
+    <property name="enemy_type" value="Follower"/>
+   </properties>
+  </object>
+  <object id="19" name="follower" gid="99" x="524.995" y="225.065" width="16" height="16">
+   <properties>
+    <property name="enemy_type" value="Follower"/>
+   </properties>
+  </object>
+  <object id="20" name="follower" gid="99" x="273.378" y="492.528" width="16" height="16">
    <properties>
     <property name="enemy_type" value="Follower"/>
    </properties>
