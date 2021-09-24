@@ -86,7 +86,6 @@ namespace TopDownShooter.Managers
 
             foreach (var sub in subscriptions)
             {
-                Console.WriteLine($"Sending message to {sub.ParentID}");
                 sub.Handler.Invoke(sender, args);
             }
         }

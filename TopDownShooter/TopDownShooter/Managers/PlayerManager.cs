@@ -12,7 +12,7 @@ using TopDownShooter.Interfaces;
 using TopDownShooter.Managers;
 using TopDownShooter.Services;
 
-namespace TopDownShooter.ECS.Managers
+namespace TopDownShooter.Managers
 {
     public class PlayerManager
     {
@@ -21,7 +21,7 @@ namespace TopDownShooter.ECS.Managers
 
         public Entity PlayerEntity
         {
-            get; // ASDF: PlayerEntity
+            get;
         }
 
         public PlayerManager()

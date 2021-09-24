@@ -56,6 +56,7 @@ namespace TopDownShooter.Managers
                 throw new DuplicateEngineProcessingOrderException(processingOrder);
             }
 
+            item.ParentEntityComponentManager = this;
             item.ProcessingOrder = processingOrder;
             item.Start();
             _engines = _engines.Concat(new Engine[] {item}).OrderBy(x => x.ProcessingOrder);
@@ -81,6 +82,7 @@ namespace TopDownShooter.Managers
             switch (item.Type)
             {
                 case EntityType.Player:
+                    Console.WriteLine($"Updating Player Entity: {item.ID}");
                     this.PlayerEntity = item;
                     break;
                 case EntityType.TileGrid:

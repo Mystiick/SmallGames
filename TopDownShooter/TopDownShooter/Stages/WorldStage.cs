@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using TopDownShooter.ECS.Managers;
-using TopDownShooter.Managers;
+
 using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
+using MonoGame.Extended.TextureAtlases;
+
 using TopDownShooter.ECS;
 using TopDownShooter.ECS.Components;
-using MonoGame.Extended;
 using TopDownShooter.ECS.Components.Templates;
-using MonoGame.Extended.TextureAtlases;
 using TopDownShooter.ECS.Engines;
+using TopDownShooter.Managers;
 using TopDownShooter.Services;
 
 namespace TopDownShooter.Stages
@@ -58,11 +59,7 @@ namespace TopDownShooter.Stages
 
             _player.InputManager = this.InputManager;
             _player.Camera = this.Camera;
-            _tileEngine = this.EntityComponentManager.GetEngine<TileEngine>();
-
-            this.EntityComponentManager.AddEntity(
-                new Entity(_tileEngine.BuildTileGrid(_map))
-            );
+            
         }
 
         public override void Update(GameTime gameTime)
@@ -101,11 +98,6 @@ namespace TopDownShooter.Stages
             if (InputManager.IsKeyDown(KeyBinding.WeaponThree))
             {
                 _player.SetWeapon(WeaponTemplates.Shotgun(_player.PlayerEntity));
-            }
-
-            if (InputManager.IsKeyDown(KeyBinding.Debug))
-            {
-                EntityComponentManager.Clear();
             }
         }
 
@@ -148,8 +140,13 @@ namespace TopDownShooter.Stages
         {
             Console.WriteLine("Setting up new map");
 
-            // Clear current map
-            EntityComponentManager.Clear();
+            // Clear current stage
+            this.EntityComponentManager.Clear();
+
+            _tileEngine = this.EntityComponentManager.GetEngine<TileEngine>();
+            this.EntityComponentManager.AddEntity(
+                new Entity(_tileEngine.BuildTileGrid(_map)) { Type = EntityType.TileGrid }
+            );
 
             // Setup player
             SetupPlayerSpawn();
@@ -198,7 +195,7 @@ namespace TopDownShooter.Stages
             // This tracks if a tile has a collider that accounts for it already.
             // It is used to prevent smaller colliders from generating like: [ [ [ [ [ [ [ ]
             bool[,] colliderCreated = new bool[_map.Width, _map.Height];
-            
+
             for (ushort y = 0; y < layer.Height; y++)
             {
                 for (ushort x = 0; x < layer.Width; x++)

@@ -15,7 +15,10 @@ namespace TopDownShooter.Intelligences
     public abstract class BaseIntelligence
     {
         public Entity CurrentEntity { get; set; }
-        public Entity PlayerEntity { get; set; } // ASDF: PlayerEntity
+        /// <summary>
+        /// Reference to the currently active PlayerEntity. Updated every frame, so we don't need to worry about holding onto an expired entity
+        /// </summary>
+        public Entity PlayerEntity { get; set; }
         public TileGrid Grid { get; set; }
 
         public virtual void Update(GameTime gameTime, List<Entity> allEntities)
