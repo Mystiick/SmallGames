@@ -13,7 +13,7 @@ namespace TopDownShooter.ECS.Engines
         public override Type[] RequiredComponents => new Type[] { typeof(Transform), typeof(Health), typeof(Intelligence) };
 
         private Dictionary<EnemyType, BaseIntelligence> _implementations;
-        private Entity _playerEntity, _gridEntity;
+        private Entity _playerEntity, _gridEntity; // ASDF: _playerEntity ASDF: _gridEntity
         private TileGrid _grid;
 
         public override void Start()
@@ -39,13 +39,14 @@ namespace TopDownShooter.ECS.Engines
             {
                 _playerEntity = allEntities.FirstOrDefault(x => x.Type == EntityType.Player);
             }
-            if (_gridEntity == null || _playerEntity.Expired)
+            if (_gridEntity == null || _gridEntity.Expired)
             {
                 _gridEntity = allEntities.FirstOrDefault(x => x.HasComponent<TileGrid>());
-            }
-            if (_gridEntity != null && _grid == null)
-            {
-                _grid = _gridEntity.GetComponent<TileGrid>();
+
+                if (_gridEntity != null)
+                {
+                    _grid = _gridEntity.GetComponent<TileGrid>();
+                }
             }
 
             for (int i = 0; i < this.Entities.Count; i++)
@@ -75,6 +76,7 @@ namespace TopDownShooter.ECS.Engines
             switch (entity.Type)
             {
                 case EntityType.Player:
+                    Console.WriteLine("Updating Player Entity");
                     _playerEntity = entity;
                     break;
                 case EntityType.Enemy:

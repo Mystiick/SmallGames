@@ -93,6 +93,7 @@ namespace TopDownShooter.Tests.Managers
             var gameTime = new GameTime() { ElapsedGameTime = new TimeSpan(0, 0, 1) };
             var unit = new PlayerManager();
             var camera = new OrthographicCamera(new ViewportAdapterWrapper(null));
+            Services.MessagingService.Init();
             unit.InputManager = new InputManagerWrapper() { MockIsKeyDown = (x) => true };
             unit.Camera = camera;
 

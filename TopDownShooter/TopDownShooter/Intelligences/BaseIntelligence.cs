@@ -15,7 +15,7 @@ namespace TopDownShooter.Intelligences
     public abstract class BaseIntelligence
     {
         public Entity CurrentEntity { get; set; }
-        public Entity PlayerEntity { get; set; }
+        public Entity PlayerEntity { get; set; } // ASDF: PlayerEntity
         public TileGrid Grid { get; set; }
 
         public virtual void Update(GameTime gameTime, List<Entity> allEntities)
@@ -37,12 +37,11 @@ namespace TopDownShooter.Intelligences
                 {
                     // Rotate entity to face player
                     CurrentEntity.Transform.Rotation = Helpers.DetermineAngle(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position);
-
                 }
             }
             
             // If the player is closer than 100 units, shoot at them
-            if (distanceToPlayer < 100 && weapon.CooldownRemaining <= 0)
+            if (CanSeePlayer(allEntities) && distanceToPlayer < 100 && weapon.CooldownRemaining <= 0)
             {
                 ShootAtPlayer(weapon);
             }

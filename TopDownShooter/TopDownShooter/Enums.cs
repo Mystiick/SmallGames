@@ -100,5 +100,6 @@ namespace TopDownShooter
         Wall,
         Enemy,
         Pickup,
+        TileGrid,
     }
 }

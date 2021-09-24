@@ -21,15 +21,18 @@ namespace TopDownShooter.ECS.Engines
 
             var player = allEntities.FirstOrDefault(x => x.Type == EntityType.Player);
 
-            // Should only be one, but loop throug it anyway
-            for (int i = 0; i < this.Entities.Count; i++)
+            if (player != null)
             {
-                var grid = this.Entities[i].GetComponent<TileGrid>();
-
-                // If the player has moved to a different tile, reset the weights
-                if (_lastCalculatedPlayerPosition == Point.Zero || _lastCalculatedPlayerPosition != ConvertToTilePosition(grid, player.Transform))
+                // Should only be one, but loop throug it anyway
+                for (int i = 0; i < this.Entities.Count; i++)
                 {
-                    SetWeights(grid, player);
+                    var grid = this.Entities[i].GetComponent<TileGrid>();
+
+                    // If the player has moved to a different tile, reset the weights
+                    if (_lastCalculatedPlayerPosition == Point.Zero || _lastCalculatedPlayerPosition != ConvertToTilePosition(grid, player.Transform))
+                    {
+                        SetWeights(grid, player);
+                    }
                 }
             }
         }

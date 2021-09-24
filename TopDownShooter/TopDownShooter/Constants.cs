@@ -24,6 +24,7 @@ namespace TopDownShooter
         public struct GameEvent
         {
             public const string EnemyKilled = "GameEvent.EnemyKilled";
+            public const string PlayerKilled = "GameEvent.PlayerKilled";
         }
 
         public struct TileMap

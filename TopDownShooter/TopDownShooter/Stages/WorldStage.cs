@@ -51,15 +51,15 @@ namespace TopDownShooter.Stages
             base.Start();
             MessagingService.SendMessage(EventType.UserInterface, Constants.UserInterface.SetActive, this, ScreenName.Score);
             MessagingService.SendMessage(EventType.Score, Constants.Score.PlayerScoreUpdated, this, 0);
-
-            // Get list of enemies in the Intelligence engine
             var enemyCount = this.EntityComponentManager.GetEngine<IntelligenceEngine>().MyEntities.Count(x => x.Type == EntityType.Enemy);
             MessagingService.SendMessage(EventType.Score, Constants.Score.EnemyCountUpdated, this, enemyCount);
+
+            MessagingService.Subscribe(EventType.GameEvent, Constants.GameEvent.PlayerKilled, (s, a) => { ResetMap(); }, this.StageID);
 
             _player.InputManager = this.InputManager;
             _player.Camera = this.Camera;
             _tileEngine = this.EntityComponentManager.GetEngine<TileEngine>();
-            
+
             this.EntityComponentManager.AddEntity(
                 new Entity(_tileEngine.BuildTileGrid(_map))
             );
@@ -102,6 +102,11 @@ namespace TopDownShooter.Stages
             {
                 _player.SetWeapon(WeaponTemplates.Shotgun(_player.PlayerEntity));
             }
+
+            if (InputManager.IsKeyDown(KeyBinding.Debug))
+            {
+                EntityComponentManager.Clear();
+            }
         }
 
         private void Shoot(GameTime gameTime, Weapon weapon, Entity owner)
@@ -141,6 +146,8 @@ namespace TopDownShooter.Stages
 
         private void InitNewMap()
         {
+            Console.WriteLine("Setting up new map");
+
             // Clear current map
             EntityComponentManager.Clear();
 
@@ -160,6 +167,19 @@ namespace TopDownShooter.Stages
             _player.SetWeapon(WeaponTemplates.Pistol(_player.PlayerEntity));
 
             EntityComponentManager.AddEntity(_player.PlayerEntity);
+        }
+
+        private void ResetMap()
+        {
+            _player = new PlayerManager()
+            {
+                InputManager = this.InputManager,
+                Camera = this.Camera
+            };
+
+            _player.SetSprite(ContentCache.GetClippedAsset(AssetName.Character_Brown_Idle));
+
+            InitNewMap();
         }
 
         #region | Wall Colliders |

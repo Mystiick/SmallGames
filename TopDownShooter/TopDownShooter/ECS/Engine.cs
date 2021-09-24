@@ -54,6 +54,11 @@ namespace TopDownShooter.ECS
             }
         }
 
+        public virtual void ClearEntities()
+        {
+            this.Entities.Clear();
+        }
+
         public virtual void Draw(SpriteBatch sb, GraphicsDevice gd, OrthographicCamera camera)
         {
 

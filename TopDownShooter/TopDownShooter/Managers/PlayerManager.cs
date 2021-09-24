@@ -21,7 +21,7 @@ namespace TopDownShooter.ECS.Managers
 
         public Entity PlayerEntity
         {
-            get;
+            get; // ASDF: PlayerEntity
         }
 
         public PlayerManager()

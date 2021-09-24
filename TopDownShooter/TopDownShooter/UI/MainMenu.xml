@@ -14,7 +14,7 @@
   </StackPanel>
 
   <StackPanel DockPanel.Dock="Bottom" Name="spDebug" Orientation="Horizontal" BackgroundColor="#111111" IsVisible="False">
-    <Button Name="asdf" Content="Debug!" />
+    <Button Name="btnDebug" Content="Debug!" />
   </StackPanel>
   
 </DockPanel>
