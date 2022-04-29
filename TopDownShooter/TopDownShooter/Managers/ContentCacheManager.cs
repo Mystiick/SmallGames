@@ -17,7 +17,7 @@ namespace TopDownShooter.Managers
     {
         private readonly ContentManager _content;
         private readonly Dictionary<AssetName, Texture2D> _textureCache;
-        private readonly Dictionary<ScreenName, IScreen> _screenCache;
+        private readonly Dictionary<ScreenName, BaseScreen> _screenCache;
         private readonly Dictionary<string, TiledMap> _tiledCache;
 
         private TextureAtlas atlas;
@@ -27,7 +27,7 @@ namespace TopDownShooter.Managers
             _content = content;
 
             _textureCache = new Dictionary<AssetName, Texture2D>();
-            _screenCache = new Dictionary<ScreenName, IScreen>();
+            _screenCache = new Dictionary<ScreenName, BaseScreen>();
             _tiledCache = new Dictionary<string, TiledMap>();
         }
 
@@ -81,9 +81,9 @@ namespace TopDownShooter.Managers
             };
         }
 
-        private IScreen GetScreenByName(ScreenName screen)
+        private BaseScreen GetScreenByName(ScreenName screen)
         {
-            IScreen output;
+            BaseScreen output;
 
             switch (screen)
             {

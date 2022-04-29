@@ -1,37 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.IO;
+
 using MonoGame.Extended.Gui;
 using MonoGame.Extended.Gui.Controls;
 using MonoGame.Extended.Gui.Markup;
+
 using TopDownShooter.Managers;
 using TopDownShooter.Services;
 
 namespace TopDownShooter.UI
 {
-    public class MainMenuScreen : IScreen
+    public class MainMenuScreen : BaseScreen
     {
-        private readonly string markupPath = "UI\\MainMenu.xml";
+        public MainMenuScreen() : base("UI\\MainMenu.xml") { }
 
-        public Screen Screen { get; private set; }
-
-        public MainMenuScreen()
-        {
-            LoadFromMarkup();
-        }
-
-        public void LoadFromMarkup()
-        {
-            var parser = new MarkupParser();
-            this.Screen = new Screen()
-            {
-                Content = parser.Parse(markupPath, new object())
-            };
-
-            SetupEvents();
-        }
-
-        private void SetupEvents()
+        protected override void SetupEvents()
         {
             var quitButton = Screen.FindControl<Button>("btnQuit");
             quitButton.Clicked += (sender, args) => System.Environment.Exit(0);
