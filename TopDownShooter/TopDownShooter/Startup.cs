@@ -23,13 +23,7 @@ namespace TopDownShooter
 
         public Startup()
         {
-            _graphics = new GraphicsDeviceManager(this)
-            {
-                PreferredBackBufferWidth = 1920,
-                PreferredBackBufferHeight = 1080,
-                IsFullScreen = false
-            };
-            _graphics.ApplyChanges();
+            _graphics = new GraphicsDeviceManager(this);
 #if DEBUG
             // this.Window.Position = new Point(-100, 100);
 #endif
@@ -42,6 +36,8 @@ namespace TopDownShooter
         protected override void Initialize()
         {
             base.Initialize();
+
+            UpdateResolution(new Point(1920, 1080));
         }
 
         protected override void LoadContent()
@@ -49,7 +45,7 @@ namespace TopDownShooter
             MessagingService.Init();
             _inputManager = new InputManager();
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+
             _contentManager = new ContentCacheManager(Content);
             WeaponService.Init(_contentManager);
 
@@ -107,6 +103,16 @@ namespace TopDownShooter
             _gui = new GuiSystem(viewportAdapter, guiRenderer) { ActiveScreen = _contentManager.GetScreen(ScreenName.MainMenu) };
 
             MessagingService.Subscribe(EventType.UserInterface, Constants.UserInterface.SetActive, (sender, args) => { _gui.ActiveScreen = _contentManager.GetScreen((ScreenName)args); }, _parentGuid);
+        }
+
+        private void UpdateResolution(Point size)
+        {
+            _graphics.PreferredBackBufferWidth = size.X;
+            _graphics.PreferredBackBufferHeight = size.Y;
+            _graphics.IsFullScreen = false;
+
+            _graphics.ApplyChanges();
+            _gui.ClientSizeChanged();
         }
     }
 }
