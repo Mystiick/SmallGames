@@ -171,14 +171,84 @@ namespace TopDownShooter.ECS.Engines
 
         public static Vector2 ResolveCollisions(Entity mover, List<Entity> collided)
         {
+            foreach (Entity e in collided)
+            {
+                var resolvedBox = ResolveCollision(mover, e);
+                mover.Collider.TargetBoundingBox = new Rectangle(resolvedBox.X, resolvedBox.Y, mover.Collider.TargetBoundingBox.Width, mover.Collider.TargetBoundingBox.Height);
+            }
+
+            return new Vector2(mover.Collider.TargetBoundingBox.X, mover.Collider.TargetBoundingBox.Y);
+        }
+
+        private static Point ResolveCollision(Entity e1, Entity e2)
+        {
             // Determine directions traveling. 
 
-            // Resolve X
+            // Moving right = (0,0) position, but (1+,0) target
+            // Moving down = (0,0) position but (0,1+)
+            int xOffset = e1.Collider.WorldBoundingBox.X - e1.Collider.TargetBoundingBox.X;
+            int yOffset = e1.Collider.WorldBoundingBox.Y - e1.Collider.TargetBoundingBox.Y;
 
-            // Resolve Y
+            var totalOffset = new Point(
+                xOffset == 0 ? 0 : -(xOffset / Math.Abs(xOffset)), // If moving left, X = -1
+                yOffset == 0 ? 0 : -(yOffset / Math.Abs(yOffset))  // If moving up, X = -1
+            );
 
+            return new Point(
+                EasyClamp(
+                    ResolveDimension(e1.Collider.TargetBoundingBox.X, e1.Collider.TargetBoundingBox.Width, e2.Collider.TargetBoundingBox.X, e2.Collider.TargetBoundingBox.Width, totalOffset.X),
+                    e1.Collider.WorldBoundingBox.X,
+                    e1.Collider.TargetBoundingBox.X
+                ),
+                EasyClamp(
+                    ResolveDimension(e1.Collider.TargetBoundingBox.Y, e1.Collider.TargetBoundingBox.Height, e2.Collider.TargetBoundingBox.Y, e2.Collider.TargetBoundingBox.Height, totalOffset.Y),
+                    e1.Collider.WorldBoundingBox.Y,
+                    e1.Collider.TargetBoundingBox.Y
+                )
+            );
 
-            return Vector2.Zero;
+        }
+
+        private static int EasyClamp(int value, int i1, int i2)
+        {
+            if (i1 < i2)
+                return Math.Clamp(value, i1, i2);
+            else
+                return Math.Clamp(value, i2, i1);
+        }
+
+        private static int ResolveDimension(int d1, int size1, int d2, int size2, int direction)
+        {
+
+            // Determine if X is overlapping
+            // Is E1.X between E2.X and E2.X+Width
+            // Or
+            // Is E1.X+Width between E2.X and E2.X+Width
+            if (d1 > d2 && d1 < d2 + size2)
+            {
+                // d1 Overlaps
+            }
+            else if (d1 + size1 > d2 && d1 + size1 < d2 + size2)
+            {
+                // d1+size1 overlaps
+            }
+            else
+            {
+                // Nothing overlaps, just kick it
+                return d1;
+            }
+
+            // Determine which direction to punt the dimension
+            if (direction < 0)
+            {
+                return d2 + size2;
+            }
+            else if (direction > 0)
+            {
+                return d2 - size1;
+            }
+
+            return d1;
         }
 
         #region | DEBUG |

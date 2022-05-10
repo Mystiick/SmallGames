@@ -16,7 +16,7 @@ using TopDownShooter.ECS.Components.Templates;
 using TopDownShooter.ECS.Engines;
 using TopDownShooter.Managers;
 using TopDownShooter.Services;
-using TopDownShooter.TiledExtensions;
+using TopDownShooter.Extensions.Tiled;
 
 namespace TopDownShooter.Stages
 {
