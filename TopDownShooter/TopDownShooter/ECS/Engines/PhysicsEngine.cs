@@ -14,8 +14,10 @@ namespace TopDownShooter.ECS.Engines
     /// </summary>
     public class PhysicsEngine : Engine
     {
+        private const int MAX_RESOLUTION_ATTEMPTS = 10;
         public override Type[] RequiredComponents => new Type[] { typeof(Transform), typeof(BoxCollider) };
 
+        /// <summary>At this point, all of the entities must have their target positions and bounding boxes set. This engine will update the final positions based on the targets</summary>
         public override void Update(GameTime gameTime, List<Entity> allEntities)
         {
             base.Update(gameTime, allEntities);
@@ -24,8 +26,8 @@ namespace TopDownShooter.ECS.Engines
             {
                 var x = this.Entities[i];
                 // Look for any non zero Target positions, and make sure we can actually move to that position
-                List<Entity> overlappingEntities = GetOverlappingEntities(x); 
-               
+                List<Entity> overlappingEntities = GetOverlappingEntities(x);
+
                 if (overlappingEntities.Count != 0)
                 {
                     // If we are colliding with anything, alert the colliders
@@ -53,7 +55,7 @@ namespace TopDownShooter.ECS.Engines
             }
         }
 
-        private List<Entity> GetOverlappingEntities(Entity entity)
+        public List<Entity> GetOverlappingEntities(Entity entity)
         {
             List<Entity> output = new List<Entity>();
 
@@ -62,7 +64,7 @@ namespace TopDownShooter.ECS.Engines
                 var other = this.Entities[i];
 
                 // Don't need to check this with itself
-                if (entity.ID == other.ID) 
+                if (entity.ID == other.ID)
                 {
                     continue;
                 }
@@ -91,39 +93,26 @@ namespace TopDownShooter.ECS.Engines
             return output.ToList();
         }
 
-        private void HandleNonTriggerMovement(Entity x, IEnumerable<Entity> overlappingEntities)
+        private void HandleNonTriggerMovement(Entity me, IEnumerable<Entity> overlappingEntities)
         {
-            // Make sure we aren't attempting to move into another non-trigger collider
-            if (overlappingEntities.Count(y => !y.Collider.Trigger) == 0)
+            // If a collider is static, it isn't ever going to move, no need to handle movement, something just ran into me
+            if (!me.Collider.Static)
             {
-                x.Transform.Position = x.Transform.TargetPosition;
-            }
-            else
-            {
-                Rectangle newTarget = x.Collider.WorldBoundingBox;
-                Vector2 newPosition = x.Transform.Position;
+                // Only try MAX_RESOLUTION_ATTEMPTS so we don't get stuck in an infinte loop resolving collisions
+                for (int i = 0; i < MAX_RESOLUTION_ATTEMPTS; i++)
+                {
+                    // Resolve the current collision, and make sure the entity isn't colliding with another entity now
+                    me.Transform.TargetPosition = ResolveCollisions(me, overlappingEntities.Where(x => !x.Collider.Trigger).ToList());
+                    overlappingEntities = GetOverlappingEntities(me);
 
-                // Try moving X
-                newTarget.X = x.Collider.TargetBoundingBox.X;
-                if (!overlappingEntities.Any(y => y.Collider.WorldBoundingBox.Intersects(newTarget)))
-                {
-                    newPosition.X = x.Transform.TargetPosition.X;
-                }
-                else
-                {
-                    // There's still a collision, can't move X.
-                    // Reset it so we can still check Y
-                    newTarget.X = x.Collider.WorldBoundingBox.X;
+                    // If the collisions are resolved, jump out of the loop
+                    if (overlappingEntities.Count(y => !y.Collider.Trigger) == 0)
+                    {
+                        break;
+                    }
                 }
 
-                // Try moving Y
-                newTarget.Y = x.Collider.TargetBoundingBox.Y;
-                if (!overlappingEntities.Any(y => y.Collider.WorldBoundingBox.Intersects(newTarget)))
-                {
-                    newPosition.Y = x.Transform.TargetPosition.Y;
-                }
-
-                x.Transform.Position = newPosition;
+                me.Transform.Position = me.Transform.TargetPosition;
             }
         }
 
@@ -180,6 +169,18 @@ namespace TopDownShooter.ECS.Engines
             return output.ToArray();
         }
 
+        public static Vector2 ResolveCollisions(Entity mover, List<Entity> collided)
+        {
+            // Determine directions traveling. 
+
+            // Resolve X
+
+            // Resolve Y
+
+
+            return Vector2.Zero;
+        }
+
         #region | DEBUG |
 #if DEBUG
         public override void Draw(SpriteBatch sb, GraphicsDevice gd, OrthographicCamera camera)
@@ -195,7 +196,7 @@ namespace TopDownShooter.ECS.Engines
             }
         }
 
-        public void DrawRectangle(Rectangle rect, GraphicsDevice gd, OrthographicCamera camera) 
+        public void DrawRectangle(Rectangle rect, GraphicsDevice gd, OrthographicCamera camera)
         {
             Vector3 topLeft = new Vector3(rect.Left, rect.Top, 0);
             Vector3 topRight = new Vector3(rect.Right, rect.Top, 0);

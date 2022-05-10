@@ -284,7 +284,7 @@ namespace TopDownShooter.Stages
 
             var entity = new Entity(new Component[] {
                 new Transform() { Position = location },
-                new BoxCollider() { BoundingBox = new Rectangle(Point.Zero, size) },
+                new BoxCollider() { BoundingBox = new Rectangle(Point.Zero, size), Static = true },
             })
             {
                 Name = Constants.Entities.Wall

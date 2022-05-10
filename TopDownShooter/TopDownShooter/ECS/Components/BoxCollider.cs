@@ -15,5 +15,6 @@ namespace TopDownShooter.ECS.Components
         public bool Trigger { get; set; }
         /// <summary>Determines if we need continous collision detection, or if current position is acceptable</summary>
         public bool Continuous { get; set; }
+        public bool Static { get; set; }
     }
 }
