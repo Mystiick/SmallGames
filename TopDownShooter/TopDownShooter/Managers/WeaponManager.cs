@@ -46,7 +46,7 @@ namespace TopDownShooter.Managers
                 new Transform() { Position = weapon.Bullet.Owner.Transform.Position + weapon.Bullet.Owner.Sprite.Origin, Rotation = weapon.Bullet.Owner.Transform.Rotation },
                 new Sprite() { Texture = _contentCacheManager.GetClippedAsset(AssetName.Bullet) },
                 new Velocity() { Direction =  bulletDirection, Speed = Constants.Entities.BulletBaseSpeed * weapon.BulletSpeed },
-                new BoxCollider() { BoundingBox = Constants.Entities.BulletCollider, Trigger = true, Continuous = true, OnCollisionEnter = weapon.Bullet.OnBulletHit },
+                new BoxCollider() { LocalBoundingBox = Constants.Entities.BulletCollider, Trigger = true, Continuous = true, OnCollisionEnter = weapon.Bullet.OnBulletHit },
                 new TimeToLive() { Lifespan = weapon.Range / weapon.BulletSpeed },
                 weapon.Bullet
             });

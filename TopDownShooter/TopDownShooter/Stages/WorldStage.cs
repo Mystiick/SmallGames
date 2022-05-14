@@ -16,7 +16,7 @@ using TopDownShooter.ECS.Components.Templates;
 using TopDownShooter.ECS.Engines;
 using TopDownShooter.Managers;
 using TopDownShooter.Services;
-using TopDownShooter.TiledExtensions;
+using TopDownShooter.Extensions.Tiled;
 
 namespace TopDownShooter.Stages
 {
@@ -284,7 +284,7 @@ namespace TopDownShooter.Stages
 
             var entity = new Entity(new Component[] {
                 new Transform() { Position = location },
-                new BoxCollider() { BoundingBox = new Rectangle(Point.Zero, size) },
+                new BoxCollider() { LocalBoundingBox = new Rectangle(Point.Zero, size), Static = true },
             })
             {
                 Name = Constants.Entities.Wall
@@ -329,7 +329,7 @@ namespace TopDownShooter.Stages
                         new Intelligence() { EnemyType = et },
                         new Health() { MaxHealth = 50 }, // TODO: Get from map's definition
                         new Sprite() { Texture = sprite },
-                        new BoxCollider() { BoundingBox = new Rectangle(Point.Zero, size) },
+                        new BoxCollider() { LocalBoundingBox = new Rectangle(Point.Zero, size) },
                         new Velocity() { },
                         WeaponTemplates.Pistol(e) // TODO: Get weapon type from map's definition
                     });
