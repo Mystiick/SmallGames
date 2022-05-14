@@ -99,7 +99,7 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
             ecs.Update(gameTime);
 
             // Assert
-            Assert.AreEqual(Vector2.Zero, entity.Transform.Position, "Entity should not move because it would end in a collision");
+            Assert.AreEqual(new Vector2(490, 0), entity.Transform.Position, "Entity should resolve collision. collidedEntity is at 500, and entity is size of 10. 500-10");
         }
 
         [TestMethod]
@@ -124,11 +124,11 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
 
             // Assert
             Assert.AreEqual(entity.Transform.TargetPosition.Y, entity.Transform.Position.Y, "Entity should be able to move to its Y target");
-            Assert.AreNotEqual(entity.Transform.TargetPosition.X, entity.Transform.Position.X, "Entity should NOT be able to move to its X target");
+            Assert.AreEqual(490, entity.Transform.Position.X, "Entity should resolve X target to 490");
         }
 
         [TestMethod]
-        public void E2E_EntityComponentManager_Collision_CantMoveY_ButStillMovesX()
+        public void E2E_EntityComponentManager_Collision_ResolveY_MovesX()
         {
             // Arrange
             var entity = new Entity(
@@ -149,7 +149,7 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
 
             // Assert
             Assert.AreEqual(entity.Transform.TargetPosition.X, entity.Transform.Position.X, "Entity should be able to move to its X target");
-            Assert.AreNotEqual(entity.Transform.TargetPosition.Y, entity.Transform.Position.Y, "Entity should NOT be able to move to its Y target");
+            Assert.AreEqual(490, entity.Transform.Position.Y, "Entity should resolve its Y target to 490");
         }
 
         [TestMethod]
