@@ -53,7 +53,7 @@ namespace TopDownShooter.Stages
             var enemy = new Entity(new Component[] {
                 new Sprite() { Texture = ContentCache.GetClippedAsset(AssetName.Character_Brown_Idle) },
                 new Transform() { Position = new Vector2(518, 354) },
-                new BoxCollider() { BoundingBox = new Rectangle(-1, 2, 10, 10) },
+                new BoxCollider() { LocalBoundingBox = new Rectangle(-1, 2, 10, 10) },
                 new Velocity()
             });
             enemy.Name = "Enemy";
@@ -64,7 +64,7 @@ namespace TopDownShooter.Stages
             var enemy2 = new Entity(new Component[] {
                 new Sprite() { Texture = ContentCache.GetClippedAsset(AssetName.Character_Brown_Idle) },
                 new Transform() { Position = new Vector2(558, 454) },
-                new BoxCollider() { BoundingBox = new Rectangle(-1, 2, 10, 10), Trigger = true },
+                new BoxCollider() { LocalBoundingBox = new Rectangle(-1, 2, 10, 10), Trigger = true },
                 new Velocity()
             });
             enemy2.Name = "Enemy2";
@@ -72,7 +72,7 @@ namespace TopDownShooter.Stages
             EntityComponentManager.AddEntity(enemy2);
         }
 
-        
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -91,7 +91,7 @@ namespace TopDownShooter.Stages
         public override void Draw()
         {
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
-            
+
             this._mapRenderer.Draw(Camera.GetViewMatrix());
 
             base.Draw();

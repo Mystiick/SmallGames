@@ -16,6 +16,7 @@ using TopDownShooter.ECS.Components.Templates;
 using TopDownShooter.ECS.Engines;
 using TopDownShooter.Managers;
 using TopDownShooter.Services;
+using TopDownShooter.Extensions.Tiled;
 
 namespace TopDownShooter.Stages
 {
@@ -59,7 +60,7 @@ namespace TopDownShooter.Stages
 
             _player.InputManager = this.InputManager;
             _player.Camera = this.Camera;
-            
+
         }
 
         public override void Update(GameTime gameTime)
@@ -186,11 +187,17 @@ namespace TopDownShooter.Stages
 
             foreach (TiledMapTileLayer layer in collidableLayers)
             {
-                ProcessLayer(layer);
+                ProcessLayerColliders(layer);
             }
+
+            // Draw a rectangle around the terrain's borders
+            AddCollider(new Point(-1, -1), new Point(_map.Width, -1), null);                     // Top collider
+            AddCollider(new Point(-1, _map.Height), new Point(_map.Width, _map.Height), null);   // Bottom collider
+            AddCollider(new Point(-1, 0), new Point(-1, _map.Height - 1), null);                 // Left left collider
+            AddCollider(new Point(_map.Width, 0), new Point(_map.Width, _map.Height - 1), null); // Right collider
         }
 
-        private void ProcessLayer(TiledMapTileLayer layer)
+        private void ProcessLayerColliders(TiledMapTileLayer layer)
         {
             // This tracks if a tile has a collider that accounts for it already.
             // It is used to prevent smaller colliders from generating like: [ [ [ [ [ [ [ ]
@@ -200,12 +207,12 @@ namespace TopDownShooter.Stages
             {
                 for (ushort x = 0; x < layer.Width; x++)
                 {
-                    ProcessTile(layer, x, y, colliderCreated);
+                    ProcessTileColliders(layer, x, y, colliderCreated);
                 }
             }
         }
 
-        private void ProcessTile(TiledMapTileLayer layer, ushort x, ushort y, bool[,] colliderCreated)
+        private void ProcessTileColliders(TiledMapTileLayer layer, ushort x, ushort y, bool[,] colliderCreated)
         {
             // Starting with the current tile, if it is a collidable tile (not blank), peek at the next horizontal tile
             // Continue peeking at the next horizontal tile down the line untiul we hit one that is blank.
@@ -220,7 +227,7 @@ namespace TopDownShooter.Stages
                 // Only create the group if it's not a standalone tile. Those will be created in the vertical grouping (this prevents overlaps and duplicate tiles)
                 if (firstTile.GlobalIdentifier != lastTile.GlobalIdentifier)
                 {
-                    AddCollider(firstTile, lastTile, colliderCreated);
+                    AddCollider(firstTile.ToPoint(), lastTile.ToPoint(), colliderCreated);
                 }
                 else
                 {
@@ -228,7 +235,7 @@ namespace TopDownShooter.Stages
                     lastTile = GetLastTile(layer, firstTile, false);
 
                     // Don't care about GlobalIDs here, always create it. This lets 1x1 tiles generate a collider
-                    AddCollider(firstTile, lastTile, colliderCreated);
+                    AddCollider(firstTile.ToPoint(), lastTile.ToPoint(), colliderCreated);
                 }
             }
         }
@@ -266,7 +273,7 @@ namespace TopDownShooter.Stages
             return lastTile;
         }
 
-        private void AddCollider(TiledMapTile start, TiledMapTile end, bool[,] colliderCreated)
+        private void AddCollider(Point start, Point end, bool[,] colliderCreated)
         {
             int sizeX = end.X - start.X + 1;
             int sizeY = end.Y - start.Y + 1;
@@ -277,7 +284,7 @@ namespace TopDownShooter.Stages
 
             var entity = new Entity(new Component[] {
                 new Transform() { Position = location },
-                new BoxCollider() { BoundingBox = new Rectangle(Point.Zero, size) },
+                new BoxCollider() { LocalBoundingBox = new Rectangle(Point.Zero, size), Static = true },
             })
             {
                 Name = Constants.Entities.Wall
@@ -286,11 +293,15 @@ namespace TopDownShooter.Stages
 
             EntityComponentManager.AddEntity(entity);
 
-            for (int x = start.X; x <= end.X; x++)
+
+            if (colliderCreated != null)
             {
-                for (int y = start.Y; y <= end.Y; y++)
+                for (int x = start.X; x <= end.X; x++)
                 {
-                    colliderCreated[x, y] = true;
+                    for (int y = start.Y; y <= end.Y; y++)
+                    {
+                        colliderCreated[x, y] = true;
+                    }
                 }
             }
         }
@@ -318,7 +329,7 @@ namespace TopDownShooter.Stages
                         new Intelligence() { EnemyType = et },
                         new Health() { MaxHealth = 50 }, // TODO: Get from map's definition
                         new Sprite() { Texture = sprite },
-                        new BoxCollider() { BoundingBox = new Rectangle(Point.Zero, size) },
+                        new BoxCollider() { LocalBoundingBox = new Rectangle(Point.Zero, size) },
                         new Velocity() { },
                         WeaponTemplates.Pistol(e) // TODO: Get weapon type from map's definition
                     });

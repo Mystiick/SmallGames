@@ -5,13 +5,10 @@ using MonoGame.Extended.Gui;
 
 namespace TopDownShooter.UI
 {
-    public class BlankScreen : IScreen
+    public class BlankScreen : BaseScreen
     {
-        public Screen Screen => throw new NotImplementedException();
-
-        public void LoadFromMarkup()
+        public BlankScreen() : base("")
         {
-            throw new NotImplementedException();
         }
     }
 }

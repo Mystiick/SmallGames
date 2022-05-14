@@ -16,7 +16,7 @@ namespace TopDownShooter.ECS.Engines
 
         public TransformEngine()
         {
-            
+
         }
 
         public override void Update(GameTime gameTime, List<Entity> allEntities)
@@ -46,13 +46,13 @@ namespace TopDownShooter.ECS.Engines
                 if (x.Collider != null)
                 {
                     // Need to do it this way as x.Collider.TargetBoundingBox is a struct, and must be assigned to directly, instead of modified
-                    var targetBoundingBox = x.Collider.BoundingBox;
+                    var targetBoundingBox = x.Collider.LocalBoundingBox;
                     targetBoundingBox.X += (int)x.Transform.TargetPosition.X;
                     targetBoundingBox.Y += (int)x.Transform.TargetPosition.Y;
                     x.Collider.TargetBoundingBox = targetBoundingBox;
 
                     // Need to do it this way as x.Collider.WorldBoundingBox is a struct, and must be assigned to directly, instead of modified
-                    var worldBoundingBox = x.Collider.BoundingBox;
+                    var worldBoundingBox = x.Collider.LocalBoundingBox;
                     worldBoundingBox.X += (int)x.Transform.Position.X;
                     worldBoundingBox.Y += (int)x.Transform.Position.Y;
                     x.Collider.WorldBoundingBox = worldBoundingBox;

@@ -27,14 +27,35 @@ namespace TopDownShooter.ECS.Engines
                 for (int i = 0; i < this.Entities.Count; i++)
                 {
                     var grid = this.Entities[i].GetComponent<TileGrid>();
+                    Point playerPosition = ConvertToTilePosition(grid, player.Transform);
 
-                    // If the player has moved to a different tile, reset the weights
-                    if (_lastCalculatedPlayerPosition == Point.Zero || _lastCalculatedPlayerPosition != ConvertToTilePosition(grid, player.Transform))
+                    // If the player hasn't been calculated or moved to a different tile, reset the weights
+                    if ((_lastCalculatedPlayerPosition == Point.Zero || _lastCalculatedPlayerPosition != playerPosition) && CanCalculateWeights(grid, playerPosition))
                     {
-                        SetWeights(grid, player);
+                        SetWeights(grid, playerPosition);
                     }
+
+                    // Keep track of where the player was last, so we don't need to do this every frame
+                    _lastCalculatedPlayerPosition = playerPosition;
                 }
             }
+        }
+
+        public bool CanCalculateWeights(TileGrid grid, Point startPosition)
+        {
+            // Validate that the player is on the grid. This should never realistically happen but is a safeguard
+            if (grid.Tiles.GetLength(0) <= startPosition.X || startPosition.X < 0)
+            {
+                Console.WriteLine("X Outside of grid, not calculating anything");
+                return false;
+            }
+            else if (grid.Tiles.GetLength(1) <= startPosition.Y || startPosition.Y < 0)
+            {
+                Console.WriteLine("Y Outside of grid, not calculating anything");
+                return false;
+            }
+
+            return true;
         }
 
         public TileGrid BuildTileGrid(TiledMap map)
@@ -136,14 +157,10 @@ namespace TopDownShooter.ECS.Engines
             return output;
         }
 
-        private void SetWeights(TileGrid grid, Entity target)
+        private void SetWeights(TileGrid grid, Point startPosition)
         {
             var tileQueue = new Queue<Tile>();
-            Point startPosition = ConvertToTilePosition(grid, target.Transform);
             Tile startingTile = grid.Tiles[startPosition.X, startPosition.Y];
-            
-            // Keep track of where the player was last, so we don't need to do this every frame
-            _lastCalculatedPlayerPosition = startPosition;
 
             grid.Reset();
 

@@ -9,45 +9,32 @@ using TopDownShooter.Services;
 
 namespace TopDownShooter.UI
 {
-    public class ScoreScreen : IScreen
+    public class ScoreScreen : BaseScreen
     {
-        private readonly string markupPath = "UI\\Score.xml";
         private readonly Guid _parentGuid;
 
-        public Screen Screen { get; private set; }
-
-        public ScoreScreen()
+        public ScoreScreen() : base("UI\\Score.xml")
         {
             _parentGuid = Guid.NewGuid();
-            LoadFromMarkup();
         }
 
-        public void LoadFromMarkup()
-        {
-            var parser = new MarkupParser();
-            this.Screen = new Screen()
-            {
-                Content = parser.Parse(markupPath, new object())
-            };
-
-            SetupEvents();
-        }
-
-        private void SetupEvents()
+        protected override void SetupEvents()
         {
             MessagingService.Subscribe(
-                EventType.Score, 
-                Constants.Score.PlayerScoreUpdated, 
-                (sender, args) => {
+                EventType.Score,
+                Constants.Score.PlayerScoreUpdated,
+                (sender, args) =>
+                {
                     Screen.FindControl<Label>("lblScore").Content = $"Score: {args}";
-                }, 
+                },
                 _parentGuid
             );
 
             MessagingService.Subscribe(
                 EventType.Score,
                 Constants.Score.EnemyCountUpdated,
-                (sender, args) => {
+                (sender, args) =>
+                {
                     Screen.FindControl<Label>("lblEnemies").Content = $"Enemies Remaining: {args}";
                 },
                 _parentGuid
