@@ -169,44 +169,73 @@ namespace TopDownShooter.ECS.Engines
             return output.ToArray();
         }
 
+        /// <summary>
+        /// Resolves a BoxCollider collision between a moving entity and all entities is has collided with.
+        /// First resolves the entity using the Target X with Source Y, and then the Target Y entity using
+        /// </summary>
         public static Vector2 ResolveCollisions(Entity mover, List<Entity> collided)
         {
             foreach (Entity e in collided)
             {
-                var resolvedBox = ResolveCollision(mover, e);
-                mover.Collider.TargetBoundingBox = new Rectangle(resolvedBox.X, resolvedBox.Y, mover.Collider.TargetBoundingBox.Width, mover.Collider.TargetBoundingBox.Height);
+                BoxCollider temp = mover.Collider.Copy();
+
+                // Resolve target X
+                temp.TargetBoundingBox = new Rectangle(
+                    temp.TargetBoundingBox.X,
+                    mover.Collider.WorldBoundingBox.Y,
+                    temp.WorldBoundingBox.Width,
+                    temp.WorldBoundingBox.Height
+                );
+                Point pX = ResolveCollision(temp, e.Collider);
+
+                // Resolve target Y
+                temp.TargetBoundingBox = new Rectangle(
+                    mover.Collider.WorldBoundingBox.X,
+                    mover.Collider.TargetBoundingBox.Y,
+                    temp.WorldBoundingBox.Width,
+                    temp.WorldBoundingBox.Height
+                );
+                Point pY = ResolveCollision(temp, e.Collider);
+
+                mover.Collider.TargetBoundingBox = new Rectangle(pX.X, pY.Y, mover.Collider.TargetBoundingBox.Width, mover.Collider.TargetBoundingBox.Height);
             }
 
             return new Vector2(mover.Collider.TargetBoundingBox.X, mover.Collider.TargetBoundingBox.Y);
         }
 
-        private static Point ResolveCollision(Entity e1, Entity e2)
+        private static Point ResolveCollision(BoxCollider e1, BoxCollider e2)
         {
-            // Determine directions traveling. 
+            if (e1.TargetBoundingBox.Intersects(e2.WorldBoundingBox))
+            {
+                // Determine directions traveling. 
 
-            // Moving right = (0,0) position, but (1+,0) target
-            // Moving down = (0,0) position but (0,1+)
-            int xOffset = e1.Collider.WorldBoundingBox.X - e1.Collider.TargetBoundingBox.X;
-            int yOffset = e1.Collider.WorldBoundingBox.Y - e1.Collider.TargetBoundingBox.Y;
+                // Moving right = (0,0) position, but (1+,0) target
+                // Moving down = (0,0) position but (0,1+)
+                int xOffset = e1.WorldBoundingBox.X - e1.TargetBoundingBox.X;
+                int yOffset = e1.WorldBoundingBox.Y - e1.TargetBoundingBox.Y;
 
-            var totalOffset = new Point(
-                xOffset == 0 ? 0 : -(xOffset / Math.Abs(xOffset)), // If moving left, X = -1
-                yOffset == 0 ? 0 : -(yOffset / Math.Abs(yOffset))  // If moving up, X = -1
-            );
+                var totalOffset = new Point(
+                    xOffset == 0 ? 0 : -(xOffset / Math.Abs(xOffset)), // If moving left, X = -1
+                    yOffset == 0 ? 0 : -(yOffset / Math.Abs(yOffset))  // If moving up, X = -1
+                );
 
-            return new Point(
-                EasyClamp(
-                    ResolveDimension(e1.Collider.TargetBoundingBox.X, e1.Collider.TargetBoundingBox.Width, e2.Collider.TargetBoundingBox.X, e2.Collider.TargetBoundingBox.Width, totalOffset.X),
-                    e1.Collider.WorldBoundingBox.X,
-                    e1.Collider.TargetBoundingBox.X
-                ),
-                EasyClamp(
-                    ResolveDimension(e1.Collider.TargetBoundingBox.Y, e1.Collider.TargetBoundingBox.Height, e2.Collider.TargetBoundingBox.Y, e2.Collider.TargetBoundingBox.Height, totalOffset.Y),
-                    e1.Collider.WorldBoundingBox.Y,
-                    e1.Collider.TargetBoundingBox.Y
-                )
-            );
-
+                return new Point(
+                    EasyClamp(
+                        ResolveDimension(e1.TargetBoundingBox.X, e1.TargetBoundingBox.Width, e2.TargetBoundingBox.X, e2.TargetBoundingBox.Width, totalOffset.X),
+                        e1.WorldBoundingBox.X,
+                        e1.TargetBoundingBox.X
+                    ),
+                    EasyClamp(
+                        ResolveDimension(e1.TargetBoundingBox.Y, e1.TargetBoundingBox.Height, e2.TargetBoundingBox.Y, e2.TargetBoundingBox.Height, totalOffset.Y),
+                        e1.WorldBoundingBox.Y,
+                        e1.TargetBoundingBox.Y
+                    )
+                );
+            }
+            else
+            {
+                return new Point(e1.TargetBoundingBox.X, e1.TargetBoundingBox.Y);
+            }
         }
 
         private static int EasyClamp(int value, int i1, int i2)
@@ -217,6 +246,7 @@ namespace TopDownShooter.ECS.Engines
                 return Math.Clamp(value, i2, i1);
         }
 
+        // TODO: Cleanup
         private static int ResolveDimension(int d1, int size1, int d2, int size2, int direction)
         {
 

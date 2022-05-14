@@ -85,13 +85,13 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
             var entity = new Entity(
                 new Transform() { Position = Vector2.Zero },
                 new Velocity() { Direction = new Vector2(5, 0), Speed = 1000f },
-                new BoxCollider() { BoundingBox = new Rectangle(0, 0, 10, 10) }
+                new BoxCollider() { LocalBoundingBox = new Rectangle(0, 0, 10, 10) }
             );
             ecs.AddEntity(entity);
 
             var collidedEntity = new Entity(
                 new Transform() { Position = new Vector2(500, -100) },
-                new BoxCollider() { BoundingBox = new Rectangle(0, 0, 1000, 1000) }
+                new BoxCollider() { LocalBoundingBox = new Rectangle(0, 0, 1000, 1000) }
             );
             ecs.AddEntity(collidedEntity);
 
@@ -109,13 +109,13 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
             var entity = new Entity(
                 new Transform() { Position = Vector2.Zero },
                 new Velocity() { Direction = new Vector2(1, 1), Speed = 1000f },
-                new BoxCollider() { BoundingBox = new Rectangle(0, 0, 10, 10) }
+                new BoxCollider() { LocalBoundingBox = new Rectangle(0, 0, 10, 10) }
             );
             ecs.AddEntity(entity);
 
             var collidedEntity = new Entity(
                 new Transform() { Position = new Vector2(500, -100) },
-                new BoxCollider() { BoundingBox = new Rectangle(0, 0, 1000, 1000) }
+                new BoxCollider() { LocalBoundingBox = new Rectangle(0, 0, 1000, 1000) }
             );
             ecs.AddEntity(collidedEntity);
 
@@ -134,13 +134,13 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
             var entity = new Entity(
                 new Transform() { Position = Vector2.Zero },
                 new Velocity() { Direction = new Vector2(1, 1), Speed = 1000f },
-                new BoxCollider() { BoundingBox = new Rectangle(0, 0, 10, 10) }
+                new BoxCollider() { LocalBoundingBox = new Rectangle(0, 0, 10, 10) }
             );
             ecs.AddEntity(entity);
 
             var collidedEntity = new Entity(
                 new Transform() { Position = new Vector2(-100, 500) },
-                new BoxCollider() { BoundingBox = new Rectangle(0, 0, 1000, 1000) }
+                new BoxCollider() { LocalBoundingBox = new Rectangle(0, 0, 1000, 1000) }
             );
             ecs.AddEntity(collidedEntity);
 
@@ -161,13 +161,13 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
             var entity = new Entity(
                 new Transform() { Position = Vector2.Zero },
                 new Velocity() { Direction = new Vector2(1, 1), Speed = 1000f },
-                new BoxCollider() { BoundingBox = new Rectangle(0, 0, 10, 10), Trigger = true, OnCollisionEnter = (a, b) => { success = true; } }
+                new BoxCollider() { LocalBoundingBox = new Rectangle(0, 0, 10, 10), Trigger = true, OnCollisionEnter = (a, b) => { success = true; } }
             );
             ecs.AddEntity(entity);
 
             var collidedEntity = new Entity(
                 new Transform() { Position = new Vector2(-100, 500) },
-                new BoxCollider() { BoundingBox = new Rectangle(0, 0, 1000, 1000) }
+                new BoxCollider() { LocalBoundingBox = new Rectangle(0, 0, 1000, 1000) }
             );
             ecs.AddEntity(collidedEntity);
 
@@ -187,16 +187,16 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
             var entity = new Entity(
                 new Transform() { Position = Vector2.Zero },
                 new Velocity() { Direction = new Vector2(1, 0), Speed = 1000f },
-                new BoxCollider() { BoundingBox = new Rectangle(0, 0, 10, 10), Continuous = true, Trigger = true, OnCollisionEnter = (a, b) => { success = false; } }
+                new BoxCollider() { LocalBoundingBox = new Rectangle(0, 0, 10, 10), Continuous = true, Trigger = true, OnCollisionEnter = (a, b) => { success = false; } }
             )
-            { 
+            {
                 Name = "Unit"
             };
             ecs.AddEntity(entity);
 
             var collidedEntity = new Entity(
                 new Transform() { Position = new Vector2(-1, 500) },
-                new BoxCollider() { BoundingBox = new Rectangle(0, 0, 10, 10) }
+                new BoxCollider() { LocalBoundingBox = new Rectangle(0, 0, 10, 10) }
             )
             {
                 Name = "Other"
@@ -221,10 +221,11 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
             var entity = new Entity(
                 new Transform() { Position = Vector2.Zero },
                 new Velocity() { Direction = new Vector2(1, 0), Speed = 1000f },
-                new BoxCollider() { 
-                    BoundingBox = new Rectangle(0, 0, 10, 10), 
-                    Continuous = true, 
-                    Trigger = true, 
+                new BoxCollider()
+                {
+                    LocalBoundingBox = new Rectangle(0, 0, 10, 10),
+                    Continuous = true,
+                    Trigger = true,
                     OnCollisionEnter = (a, b) => { unitCollided = true; },
                     OnCollisionHitMe = (a, b) => { success = false; }
                 }
@@ -236,9 +237,10 @@ namespace TopDownShooter.Tests.EndToEnd.Managers
 
             var collidedEntity = new Entity(
                 new Transform() { Position = new Vector2(500, -1) },
-                new BoxCollider() { 
-                    BoundingBox = new Rectangle(0, 0, 10, 10),
-                    OnCollisionEnter = (a, b) => { success = false ; },
+                new BoxCollider()
+                {
+                    LocalBoundingBox = new Rectangle(0, 0, 10, 10),
+                    OnCollisionEnter = (a, b) => { success = false; },
                     OnCollisionHitMe = (a, b) => { otherHadCollision = true; }
                 }
             )

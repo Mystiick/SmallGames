@@ -186,7 +186,7 @@ namespace TopDownShooter.Tests.Managers.Engines
         {
             return new BoxCollider()
             {
-                BoundingBox = new Rectangle(x, y, 10, 10),
+                LocalBoundingBox = new Rectangle(x, y, 10, 10),
                 TargetBoundingBox = new Rectangle(x, y, 10, 10),
                 WorldBoundingBox = new Rectangle(x, y, 10, 10)
             };

@@ -28,11 +28,12 @@ namespace TopDownShooter.Managers
         {
             PlayerEntity = new Entity(
                 new Transform(),
-                new BoxCollider() { BoundingBox = new Rectangle(0, 0, 10, 10) },
+                new BoxCollider() { LocalBoundingBox = new Rectangle(0, 0, 10, 10) },
                 new Sprite(),
                 new Velocity(),
                 new Health() { MaxHealth = 100, CurrentHealth = 100 }
-            ) {
+            )
+            {
                 Name = Constants.Entities.Player,
                 Type = EntityType.Player
             };
@@ -46,7 +47,7 @@ namespace TopDownShooter.Managers
 
         public void SetWeapon(Weapon w)
         {
-            if (PlayerEntity.HasComponent<Weapon>()) 
+            if (PlayerEntity.HasComponent<Weapon>())
             {
                 PlayerEntity.RemoveComponent<Weapon>();
             }
