@@ -98,17 +98,20 @@ namespace TopDownShooter.ECS.Engines
             // If a collider is static, it isn't ever going to move, no need to handle movement, something just ran into me
             if (!me.Collider.Static)
             {
-                // Only try MAX_RESOLUTION_ATTEMPTS so we don't get stuck in an infinte loop resolving collisions
-                for (int i = 0; i < MAX_RESOLUTION_ATTEMPTS; i++)
+                if (overlappingEntities.Any())
                 {
-                    // Resolve the current collision, and make sure the entity isn't colliding with another entity now
-                    me.Transform.TargetPosition = ResolveCollisions(me, overlappingEntities.Where(x => !x.Collider.Trigger).ToList());
-                    overlappingEntities = GetOverlappingEntities(me);
-
-                    // If the collisions are resolved, jump out of the loop
-                    if (overlappingEntities.Count(y => !y.Collider.Trigger) == 0)
+                    // Only try MAX_RESOLUTION_ATTEMPTS so we don't get stuck in an infinte loop resolving collisions
+                    for (int i = 0; i < MAX_RESOLUTION_ATTEMPTS; i++)
                     {
-                        break;
+                        // Resolve the current collision, and make sure the entity isn't colliding with another entity now
+                        me.Transform.TargetPosition = ResolveCollisions(me, overlappingEntities.Where(x => !x.Collider.Trigger).ToList());
+                        overlappingEntities = GetOverlappingEntities(me);
+
+                        // If the collisions are resolved, jump out of the loop
+                        if (overlappingEntities.Count(y => !y.Collider.Trigger) == 0)
+                        {
+                            break;
+                        }
                     }
                 }
 
