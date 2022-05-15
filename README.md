@@ -19,6 +19,6 @@ TODO
 ## Games
 The current games that exist are:
 - [TopDownShooter](https://github.com/Mystiick/SmallGames/tree/master/TopDownShooter)
-    - You geuess it, a Top Down Shooter
+    - You guessed it, a Top Down Shooter
 
 Awesome assets provided by (and potentially modified) [Kenney](https://kenney.nl/) / [@KenneyNL](https://twitter.com/KenneyNL)
