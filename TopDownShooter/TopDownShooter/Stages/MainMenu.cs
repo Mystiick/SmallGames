@@ -39,13 +39,13 @@ namespace TopDownShooter.Stages
         private void Play_Click(object sender, object args)
         {
             StageManager.SetNextStage<WorldStage>();
-            MessagingService.SendMessage(EventType.LoadMap, "setup_world", this, "MiniComplex");
+            MessagingService.SendMessage(EventType.LoadMap, Constants.GameEvent.SetupWorld, this, "MiniComplex");
         }
 
         private void Pathfinder_Click(object sender, object args)
         {
             StageManager.SetNextStage<WorldStage>();
-            MessagingService.SendMessage(EventType.LoadMap, "setup_world", this, "Pathfinder");
+            MessagingService.SendMessage(EventType.LoadMap, Constants.GameEvent.SetupWorld, this, "Pathfinder");
         }
     }
 }

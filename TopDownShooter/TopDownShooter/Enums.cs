@@ -28,6 +28,7 @@ namespace TopDownShooter
         Score
     }
 
+    // TODO: Probably can just get rid of this and use constants for messages types
     public enum EventType
     {
         Test,
@@ -93,7 +94,7 @@ namespace TopDownShooter
         Shotgun
     }
 
-    public enum EntityType 
+    public enum EntityType
     {
         Unassigned,
         Player,
