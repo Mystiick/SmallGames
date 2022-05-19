@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
 
+using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 
 using TopDownShooter.ECS;
@@ -38,6 +39,11 @@ namespace TopDownShooter.Intelligences
             {
                 // We can't see the player, but can remember where they were, try moving there
                 MoveTowardTile(pathToPlayer.Peek());
+
+                if (pathToPlayer.Peek().ID == GetMyTile().ID)
+                {
+                    pathToPlayer.Dequeue();
+                }
             }
         }
 
@@ -47,12 +53,15 @@ namespace TopDownShooter.Intelligences
 
             if (EntityCanSeePlayer)
             {
-                Tile temp = GetMyTile();
+                // Only recreate the queue if the entity can see the player, otherwise it doesn't do anything
+                pathToPlayer = new Queue<Tile>();
 
-                while (temp.DistanceToPlayer != 0)
+                Tile temp = GetMyTile();
+                while (temp.DistanceToPlayer > 0)
                 {
                     // Find the next tile and add it to the queue
-                    break;
+                    temp = temp.Neighbors.OrderBy(x => x.DistanceToPlayer).FirstOrDefault();
+                    pathToPlayer.Enqueue(temp);
                 }
             }
         }

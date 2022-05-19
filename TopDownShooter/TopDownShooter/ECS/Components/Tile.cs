@@ -68,6 +68,8 @@ public class Tile
     public Tile West { get; set; }
     public Tile[] Neighbors { get; set; }
 
+    public Guid ID { get; private set; } = Guid.NewGuid();
+
     private const int default_distance = -1;
 
 #if DEBUG
