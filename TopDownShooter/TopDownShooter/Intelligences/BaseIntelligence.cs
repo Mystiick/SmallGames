@@ -21,46 +21,54 @@ namespace TopDownShooter.Intelligences
         public Entity PlayerEntity { get; set; }
         public TileGrid Grid { get; set; }
 
+        protected Velocity EntityVelocity;
+
+        protected bool EntityCanSeePlayer;
+
+        protected List<Entity> AllEntities;
+
         public virtual void Update(GameTime gameTime, List<Entity> allEntities)
         {
-            float distanceToPlayer = Vector2.Distance(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position); 
-            var v = CurrentEntity.GetComponent<Velocity>();
+            this.AllEntities = allEntities;
+
+            float distanceToPlayer = Vector2.Distance(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position);
+            EntityCanSeePlayer = CanSeePlayer(allEntities);
+            EntityVelocity = CurrentEntity.GetComponent<Velocity>();
+
             var weapon = CurrentEntity.GetComponent<Weapon>();
-            if (weapon != null) 
+            if (weapon != null)
             {
                 weapon.CooldownRemaining -= gameTime.ElapsedGameTime.TotalSeconds;
             }
 
-            if (v != null)
+            if (EntityVelocity != null)
             {
                 // Reset here, because it will get set any time the entity needs to move
-                v.Speed = 0;
+                EntityVelocity.Speed = 0;
 
-                if (CanSeePlayer(allEntities))
+                if (EntityCanSeePlayer)
                 {
                     // Rotate entity to face player
                     CurrentEntity.Transform.Rotation = Helpers.DetermineAngle(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position);
                 }
             }
-            
+
             // If the player is closer than 100 units, shoot at them
-            if (CanSeePlayer(allEntities) && distanceToPlayer < 100 && weapon.CooldownRemaining <= 0)
+            if (EntityCanSeePlayer && distanceToPlayer < 100 && weapon.CooldownRemaining <= 0)
             {
                 ShootAtPlayer(weapon);
             }
         }
 
-        protected bool CanSeePlayer(List<Entity> allEntities)
+        public virtual void PlayerInformationChanged()
         {
-            // Get distance between NPC and player
-            float distance = Vector2.Distance(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position);
-            Vector2 direction = PlayerEntity.Transform.Position - CurrentEntity.Transform.Position;
-            direction.Normalize();
 
-            Entity[] collidedEntities;
+        }
 
+        private bool CanSeePlayer(List<Entity> allEntities)
+        {
             // Shoot a ray toward the player
-            collidedEntities = PhysicsEngine.CastAll(CurrentEntity.Transform.Position, direction, distance, allEntities);
+            Entity[] collidedEntities = PhysicsEngine.CastAllToward(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position, allEntities);
 
             // If there are any Wall colliders hit, the NPC cannot see the player
             foreach (Entity e in collidedEntities)
@@ -70,7 +78,7 @@ namespace TopDownShooter.Intelligences
                     return false;
                 }
             }
-            
+
             // Nothing is in the way, the NPC can see the player
             return true;
         }

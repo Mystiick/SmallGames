@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
+
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Tiled;
+
+using TopDownShooter.Services;
 using TopDownShooter.ECS.Components;
 
 namespace TopDownShooter.ECS.Engines
@@ -33,6 +34,7 @@ namespace TopDownShooter.ECS.Engines
                     if ((_lastCalculatedPlayerPosition == Point.Zero || _lastCalculatedPlayerPosition != playerPosition) && CanCalculateWeights(grid, playerPosition))
                     {
                         SetWeights(grid, playerPosition);
+                        MessagingService.SendMessage(EventType.GameEvent, Constants.GameEvent.MapGridReset, this);
                     }
 
                     // Keep track of where the player was last, so we don't need to do this every frame

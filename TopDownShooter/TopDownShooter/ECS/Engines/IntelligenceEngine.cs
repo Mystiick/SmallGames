@@ -10,23 +10,16 @@ namespace TopDownShooter.ECS.Engines
 {
     public class IntelligenceEngine : Engine
     {
-        public override Type[] RequiredComponents => new Type[] { typeof(Transform), typeof(Health), typeof(Intelligence) };
+        public override Type[] RequiredComponents => new Type[] { typeof(Transform), typeof(Intelligence) };
 
-        private Dictionary<EnemyType, BaseIntelligence> _implementations;
         private TileGrid _grid;
 
         public override void Start()
         {
             base.Start();
 
-            // Build out instance pool for Intelligence implementations
-            _implementations = new Dictionary<EnemyType, BaseIntelligence>();
-            _implementations.Add(EnemyType.None, null);
-            _implementations.Add(EnemyType.Dummy, new Dummy());
-            _implementations.Add(EnemyType.Turret, new Turret());
-            _implementations.Add(EnemyType.Follower, new Follower());
-
-            MessagingService.Subscribe(EventType.GameEvent, (s,a) => { UpdateEnemyCount(); }, this.ID);
+            MessagingService.Subscribe(EventType.GameEvent, Constants.GameEvent.EnemyKilled, (s, a) => { UpdateEnemyCount(); }, this.ID);
+            MessagingService.Subscribe(EventType.GameEvent, Constants.GameEvent.MapGridReset, UpdateIntelligences, this.ID);
         }
 
         public override void Update(GameTime gameTime, List<Entity> allEntities)
@@ -34,7 +27,7 @@ namespace TopDownShooter.ECS.Engines
             base.Update(gameTime, allEntities);
 
             _grid = ParentEntityComponentManager.WorldTileGrid?.GetComponent<TileGrid>();
-            
+
             for (int i = 0; i < this.Entities.Count; i++)
             {
                 var x = this.Entities[i];
@@ -48,7 +41,7 @@ namespace TopDownShooter.ECS.Engines
 
                     intel.Implementation.Update(gameTime, allEntities);
                 }
-                
+
             }
         }
 
@@ -57,7 +50,15 @@ namespace TopDownShooter.ECS.Engines
             base.AddEntity(entity);
 
             var intel = entity.GetComponent<Intelligence>();
-            intel.Implementation = _implementations[intel.EnemyType];
+
+            intel.Implementation = intel.EnemyType switch
+            {
+                EnemyType.None => null,
+                EnemyType.Dummy => new Intelligences.Dummy(),
+                EnemyType.Follower => new Intelligences.Follower(),
+                EnemyType.Turret => new Intelligences.Turret(),
+                _ => throw new NotImplementedException($"EnemyType of {intel.EnemyType} is not yet implemented")
+            };
 
             switch (entity.Type)
             {
@@ -67,9 +68,18 @@ namespace TopDownShooter.ECS.Engines
             }
         }
 
-        public void UpdateEnemyCount()
+        private void UpdateEnemyCount()
         {
             MessagingService.SendMessage(EventType.Score, Constants.Score.EnemyCountUpdated, this, this.Entities.Count(x => x.Type == EntityType.Enemy && !x.Expired));
+        }
+
+        private void UpdateIntelligences(object sender, object args)
+        {
+            // Something has changed, and we need 
+            foreach (Entity e in this.Entities)
+            {
+                e.GetComponent<Intelligence>().Implementation.PlayerInformationChanged();
+            }
         }
     }
 }

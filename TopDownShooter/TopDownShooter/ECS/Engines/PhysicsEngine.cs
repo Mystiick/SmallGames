@@ -146,6 +146,21 @@ namespace TopDownShooter.ECS.Engines
         }
 
         /// <summary>
+        /// Gets all colliding entities between <paramref name="origin"/> and <paramref name="direction"/>
+        /// </summary>
+        public static Entity[] CastAllToward(Vector2 origin, Vector2 destination, List<Entity> targets)
+        {
+            Vector2 direction = destination - origin;
+            float distance = Vector2.Distance(origin, destination);
+
+            // Need to normalize it after calculating the distance, otherwise the distance would always be between 0 and 1
+            direction.Normalize();
+
+            return PhysicsEngine.CastAll(origin, direction, distance, targets);
+        }
+
+
+        /// <summary>
         /// Gets all colliding entities between <paramref name="origin"/> and <paramref name="direction"/>*<paramref name="maxDistance"/>
         /// </summary>
         public static Entity[] CastAll(Vector2 origin, Vector2 direction, float maxDistance, List<Entity> targets)
