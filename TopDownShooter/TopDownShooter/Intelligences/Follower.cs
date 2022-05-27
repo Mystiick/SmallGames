@@ -60,7 +60,7 @@ namespace TopDownShooter.Intelligences
                 while (temp.DistanceToPlayer > 0)
                 {
                     // Find the next tile and add it to the queue
-                    temp = temp.Neighbors.OrderBy(x => x.DistanceToPlayer).FirstOrDefault();
+                    temp = temp.Neighbors.Where(x => x.CanTravelThrough).OrderBy(x => x.DistanceToPlayer).FirstOrDefault();
                     pathToPlayer.Enqueue(temp);
                 }
             }
