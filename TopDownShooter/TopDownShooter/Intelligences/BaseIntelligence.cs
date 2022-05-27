@@ -25,8 +25,12 @@ namespace TopDownShooter.Intelligences
 
         protected bool EntityCanSeePlayer;
 
+        protected List<Entity> AllEntities;
+
         public virtual void Update(GameTime gameTime, List<Entity> allEntities)
         {
+            this.AllEntities = allEntities;
+
             float distanceToPlayer = Vector2.Distance(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position);
             EntityCanSeePlayer = CanSeePlayer(allEntities);
             EntityVelocity = CurrentEntity.GetComponent<Velocity>();
@@ -63,15 +67,8 @@ namespace TopDownShooter.Intelligences
 
         private bool CanSeePlayer(List<Entity> allEntities)
         {
-            // Get distance between NPC and player
-            float distance = Vector2.Distance(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position);
-            Vector2 direction = PlayerEntity.Transform.Position - CurrentEntity.Transform.Position;
-            direction.Normalize();
-
-            Entity[] collidedEntities;
-
             // Shoot a ray toward the player
-            collidedEntities = PhysicsEngine.CastAll(CurrentEntity.Transform.Position, direction, distance, allEntities);
+            Entity[] collidedEntities = PhysicsEngine.CastAllToward(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position, allEntities);
 
             // If there are any Wall colliders hit, the NPC cannot see the player
             foreach (Entity e in collidedEntities)
