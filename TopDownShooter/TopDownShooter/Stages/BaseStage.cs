@@ -1,97 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
+using System.IO;
+
 using MonoGame.Extended.Gui;
-using TopDownShooter.Interfaces;
-using TopDownShooter.Managers;
-using TopDownShooter.Services;
+using MonoGame.Extended.Gui.Markup;
 
-namespace TopDownShooter.Stages
+namespace MystiickCore.Models;
+
+public abstract class BaseScreen
 {
-    public abstract class BaseStage : IDisposable
+    public Screen Screen
     {
-        protected GraphicsDevice GraphicsDevice;
-        protected SpriteBatch SpriteBatch;
-        protected ContentCacheManager ContentCache;
-        protected StageManager StageManager;
-        protected GuiSystem UserInterface;
-        protected EntityComponentManager EntityComponentManager;
-        protected IInputManager InputManager;
+        get;
+        private set;
+    }
 
-        public OrthographicCamera Camera { get; protected set; }
-        public readonly Guid StageID;
+    public BaseScreen(string markupPath)
+    {
+        LoadFromMarkup(markupPath);
+    }
 
-        protected BaseStage()
+    private void LoadFromMarkup(string markupPath)
+    {
+        var parser = new MarkupParser();
+        this.Screen = new Screen()
         {
-            StageID = Guid.NewGuid();
-        }
+            Content = parser.Parse(
+                Path.Combine(AppContext.BaseDirectory, markupPath),
+                new object()
+            )
+        };
 
-        public virtual void InitializeBase(
-            SpriteBatch spriteBatch, 
-            StageManager stageManager, 
-            GuiSystem gui,
-            IInputManager input,
-            object[] args)
-        {
-            GraphicsDevice = spriteBatch.GraphicsDevice;
-            SpriteBatch = spriteBatch;
-            StageManager = stageManager;
-            UserInterface = gui;
-            InputManager = input;
-            EntityComponentManager = new EntityComponentManager();
-            EntityComponentManager.Init();
-            Camera = new OrthographicCamera(GraphicsDevice) { Zoom = 3f };
-        }
+        SetupEvents();
+    }
 
-        /// <summary>
-        /// Function that declares that this stage has the focus
-        /// </summary>
-        public virtual void Start()
-        {
-
-        }
-
-        public virtual void LoadContent(ContentCacheManager contentManager)
-        {
-            ContentCache = contentManager;
-        }
-
-        public virtual void Update(GameTime gameTime)
-        {
-            EntityComponentManager.Update(gameTime);
-        }
-
-        public virtual void Draw()
-        {
-            EntityComponentManager.Draw(SpriteBatch, GraphicsDevice, Camera);
-        }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    MessagingService.UnsubscribeParent(this.StageID);
-                }
-
-                disposedValue = true;
-            }
-        }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-        }
-        #endregion
+    protected virtual void SetupEvents()
+    {
 
     }
 }

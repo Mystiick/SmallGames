@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
-using TopDownShooter.ECS.Components;
 
-namespace TopDownShooter.ECS.Engines
+using MonoGame.Extended;
+
+using MystiickCore.ECS.Components;
+
+namespace MystiickCore.ECS.Engines
 {
     /// <summary>
     /// Engine that handles collisions and the Transform.Position update for an entity

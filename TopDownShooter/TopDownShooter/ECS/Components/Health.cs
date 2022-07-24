@@ -1,32 +1,31 @@
-﻿namespace TopDownShooter.ECS.Components
+﻿namespace MystiickCore.ECS.Components;
+
+public class Health : Component
 {
-    public class Health : Component
+    private int _maxHealth;
+
+    public int CurrentHealth { get; set; }
+    public int MaxHealth
     {
-        private int _maxHealth;
-
-        public int CurrentHealth { get; set; }
-        public int MaxHealth
+        get
         {
-            get
-            {
-                return _maxHealth;
-            }
-            set
-            {
-                var diff = value - _maxHealth;
-
-                _maxHealth += diff;
-                this.CurrentHealth += diff;
-            }
+            return _maxHealth;
         }
-
-        public Health()
+        set
         {
-        }
+            var diff = value - _maxHealth;
 
-        public Health(int max)
-        {
-            this.MaxHealth = max;
+            _maxHealth += diff;
+            this.CurrentHealth += diff;
         }
+    }
+
+    public Health()
+    {
+    }
+
+    public Health(int max)
+    {
+        this.MaxHealth = max;
     }
 }

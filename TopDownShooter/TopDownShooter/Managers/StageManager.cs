@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Gui;
-using TopDownShooter.Interfaces;
-using TopDownShooter.Stages;
 
-namespace TopDownShooter.Managers
+using MystiickCore.Managers;
+using MystiickCore.Interfaces;
+using MystiickCore.Models;
+
+namespace MystiickCore.Managers
 {
     public class StageManager
     {
@@ -13,13 +15,15 @@ namespace TopDownShooter.Managers
         private readonly ContentCacheManager _contentCache;
         private readonly GuiSystem _gui;
         private readonly IInputManager _input;
+        private readonly EntityComponentManager _ecm;
 
-        public StageManager(SpriteBatch spriteBatch, ContentCacheManager contentManager, GuiSystem gui, IInputManager inputManager)
+        public StageManager(SpriteBatch spriteBatch, ContentCacheManager contentManager, GuiSystem gui, IInputManager inputManager, EntityComponentManager ecm)
         {
             _spriteBatch = spriteBatch;
             _contentCache = contentManager;
             _gui = gui;
             _input = inputManager;
+            _ecm = ecm;
         }
 
         public BaseStage CurrentStage
@@ -34,10 +38,10 @@ namespace TopDownShooter.Managers
             private set;
         }
 
-        public void SetNextStage<T>(object[] arguments = null) where T : BaseStage, new()
+        public void SetNextStage<T>(object[]? arguments = null) where T : BaseStage, new()
         {
             NextStage = new T();
-            NextStage.InitializeBase(_spriteBatch, this, _gui, _input, arguments);
+            NextStage.InitializeBase(_spriteBatch, this, _gui, _input, _ecm, arguments);
             NextStage.LoadContent(_contentCache);
         }
 

@@ -5,35 +5,24 @@ using Microsoft.Xna.Framework;
 
 using MonoGame.Extended;
 
-using TopDownShooter.ECS;
+using MystiickCore;
+using MystiickCore.ECS;
+using MystiickCore.ECS.Components;
+using MystiickCore.Services;
+
 using TopDownShooter.ECS.Components;
-using TopDownShooter.ECS.Engines;
-using TopDownShooter.Services;
 
 namespace TopDownShooter.Intelligences
 {
-    public abstract class BaseIntelligence
+    public abstract class ShooterIntelligence : BaseIntelligence
     {
-        public Entity CurrentEntity { get; set; }
-        /// <summary>
-        /// Reference to the currently active PlayerEntity. Updated every frame, so we don't need to worry about holding onto an expired entity
-        /// </summary>
-        public Entity PlayerEntity { get; set; }
         public TileGrid Grid { get; set; }
 
-        protected Velocity EntityVelocity;
-
-        protected bool EntityCanSeePlayer;
-
-        protected List<Entity> AllEntities;
-
-        public virtual void Update(GameTime gameTime, List<Entity> allEntities)
+        public override void Update(GameTime gameTime, List<Entity> allEntities)
         {
-            this.AllEntities = allEntities;
+            base.Update(gameTime, allEntities);
 
             float distanceToPlayer = Vector2.Distance(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position);
-            EntityCanSeePlayer = CanSeePlayer(allEntities);
-            EntityVelocity = CurrentEntity.GetComponent<Velocity>();
 
             var weapon = CurrentEntity.GetComponent<Weapon>();
             if (weapon != null)
@@ -58,29 +47,6 @@ namespace TopDownShooter.Intelligences
             {
                 ShootAtPlayer(weapon);
             }
-        }
-
-        public virtual void PlayerInformationChanged()
-        {
-
-        }
-
-        private bool CanSeePlayer(List<Entity> allEntities)
-        {
-            // Shoot a ray toward the player
-            Entity[] collidedEntities = PhysicsEngine.CastAllToward(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position, allEntities);
-
-            // If there are any Wall colliders hit, the NPC cannot see the player
-            foreach (Entity e in collidedEntities)
-            {
-                if (e.Name == Constants.Entities.Wall)
-                {
-                    return false;
-                }
-            }
-
-            // Nothing is in the way, the NPC can see the player
-            return true;
         }
 
         protected void ShootAtPlayer(Weapon weapon)

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TopDownShooter.Intelligences;
+﻿using MystiickCore.ECS;
 
-namespace TopDownShooter.ECS.Components
+namespace MystiickCore.ECS.Components;
+
+public class Intelligence : Component
 {
-    public class Intelligence : Component
-    {
-        public EnemyType EnemyType { get; set; }
-        public BaseIntelligence Implementation { get; set; }
-    }
+    public BaseIntelligence Implementation { get; set; }
 }

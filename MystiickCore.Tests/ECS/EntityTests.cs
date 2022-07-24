@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xna.Framework;
-using TopDownShooter.ECS;
-using TopDownShooter.ECS.Components;
-using TopDownShooter.Exceptions;
+
+using MystiickCore.ECS;
+using MystiickCore.ECS.Components;
+using MystiickCore.Exceptions;
 
 namespace TopDownShooter.Tests.ECS
 {

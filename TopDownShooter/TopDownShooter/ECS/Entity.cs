@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using TopDownShooter.ECS.Components;
-using TopDownShooter.Exceptions;
+using MystiickCore.ECS.Components;
+using MystiickCore.Exceptions;
 
-namespace TopDownShooter.ECS
+namespace MystiickCore.ECS
 {
     public class Entity
     {
@@ -18,6 +18,7 @@ namespace TopDownShooter.ECS
         public string Name { get; set; }
         public EntityType Type { get; set; }
         public int ComponentCount { get { return _components.Count; } }
+        public bool Opaque { get; set; }
 
         private List<Component> _components;
 

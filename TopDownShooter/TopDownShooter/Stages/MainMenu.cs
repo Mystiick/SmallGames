@@ -1,12 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended.Gui;
-using MonoGame.Extended.TextureAtlases;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TopDownShooter.Managers;
-using TopDownShooter.Services;
+﻿using MystiickCore;
+using MystiickCore.Services;
+using MystiickCore.Models;
+using MystiickCore.Managers;
 
 namespace TopDownShooter.Stages
 {
@@ -39,13 +34,13 @@ namespace TopDownShooter.Stages
         private void Play_Click(object sender, object args)
         {
             StageManager.SetNextStage<WorldStage>();
-            MessagingService.SendMessage(EventType.LoadMap, Constants.GameEvent.SetupWorld, this, "MiniComplex");
+            MessagingService.SendMessage(EventType.LoadMap, MystiickCore.Constants.GameEvent.SetupWorld, this, "MiniComplex");
         }
 
         private void Pathfinder_Click(object sender, object args)
         {
             StageManager.SetNextStage<WorldStage>();
-            MessagingService.SendMessage(EventType.LoadMap, Constants.GameEvent.SetupWorld, this, "Pathfinder");
+            MessagingService.SendMessage(EventType.LoadMap, MystiickCore.Constants.GameEvent.SetupWorld, this, "Pathfinder");
         }
     }
 }

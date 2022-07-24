@@ -1,11 +1,10 @@
-﻿using System.IO;
-
-using MonoGame.Extended.Gui;
+﻿using MonoGame.Extended.Gui;
 using MonoGame.Extended.Gui.Controls;
-using MonoGame.Extended.Gui.Markup;
 
-using TopDownShooter.Managers;
-using TopDownShooter.Services;
+using MystiickCore;
+using MystiickCore.Models;
+using MystiickCore.Services;
+
 
 namespace TopDownShooter.UI
 {

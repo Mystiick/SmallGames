@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
 
-namespace TopDownShooter.Interfaces
+namespace MystiickCore.Interfaces;
+
+public interface IInputManager
 {
-    public interface IInputManager
-    {
-        bool IsKeyDown(KeyBinding key);
-        public Vector2 GetMousePosition();
-        public void Update(GameTime gameTime);
-    }
+    bool IsKeyDown(string key);
+    public Vector2 GetMousePosition();
+    public void Update(GameTime gameTime);
 }

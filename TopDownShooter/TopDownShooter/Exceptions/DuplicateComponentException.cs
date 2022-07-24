@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace MystiickCore.Exceptions;
 
-namespace TopDownShooter.Exceptions
+public class DuplicateComponentException : Exception
 {
-    public class DuplicateComponentException : Exception
-    {
-        public DuplicateComponentException() : base() { }
-        public DuplicateComponentException(string message) : base(message) { }
-    }
+    public DuplicateComponentException() : base() { }
+    public DuplicateComponentException(string message) : base(message) { }
 }

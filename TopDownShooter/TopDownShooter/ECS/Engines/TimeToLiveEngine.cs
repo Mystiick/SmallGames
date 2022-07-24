@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using TopDownShooter.ECS.Components;
+﻿using Microsoft.Xna.Framework;
+using MystiickCore.ECS.Components;
 
-namespace TopDownShooter.ECS.Engines
+namespace MystiickCore.ECS.Engines
 {
     public class TimeToLiveEngine : Engine
     {

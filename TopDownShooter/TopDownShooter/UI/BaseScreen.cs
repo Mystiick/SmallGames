@@ -4,38 +4,37 @@ using System.IO;
 using MonoGame.Extended.Gui;
 using MonoGame.Extended.Gui.Markup;
 
-namespace TopDownShooter.UI
+namespace MystiickCore.Models;
+
+public abstract class BaseScreen
 {
-    public abstract class BaseScreen
+    public Screen Screen
     {
-        public Screen Screen
+        get;
+        private set;
+    }
+
+    public BaseScreen(string markupPath)
+    {
+        LoadFromMarkup(markupPath);
+    }
+
+    private void LoadFromMarkup(string markupPath)
+    {
+        var parser = new MarkupParser();
+        this.Screen = new Screen()
         {
-            get;
-            private set;
-        }
+            Content = parser.Parse(
+                Path.Combine(AppContext.BaseDirectory, markupPath),
+                new object()
+            )
+        };
 
-        public BaseScreen(string markupPath)
-        {
-            LoadFromMarkup(markupPath);
-        }
+        SetupEvents();
+    }
 
-        private void LoadFromMarkup(string markupPath)
-        {
-            var parser = new MarkupParser();
-            this.Screen = new Screen()
-            {
-                Content = parser.Parse(
-                    Path.Combine(AppContext.BaseDirectory, markupPath),
-                    new object()
-                )
-            };
+    protected virtual void SetupEvents()
+    {
 
-            SetupEvents();
-        }
-
-        protected virtual void SetupEvents()
-        {
-
-        }
     }
 }

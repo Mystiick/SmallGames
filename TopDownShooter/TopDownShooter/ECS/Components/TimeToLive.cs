@@ -1,4 +1,4 @@
-﻿namespace TopDownShooter.ECS.Components
+﻿namespace MystiickCore.ECS.Components
 {
     public class TimeToLive : Component
     {

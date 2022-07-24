@@ -1,61 +1,61 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace TopDownShooter
+namespace MystiickCore;
+
+public static class Debugger
 {
-    public static class Debugger
+    private static readonly object locker = new object();
+    private static bool _showDebugInfo;
+
+    public static bool ShowDebugInfo
     {
-        private static readonly object locker = new object();
-        private static bool _showDebugInfo;
-
-        public static bool ShowDebugInfo {
-            get
-            {
-                lock (locker)
-                {
-                    return _showDebugInfo;
-                }
-            }
-            set
-            {
-                lock (locker)
-                {
-                    _showDebugInfo = value;
-                }
-            }
-        }
-
-        [DebuggerStepThrough]
-        public static void Break()
+        get
         {
-#if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached)
+            lock (locker)
             {
-                System.Diagnostics.Debugger.Break();
+                return _showDebugInfo;
             }
-#endif
         }
-
-        [DebuggerStepThrough]
-        public static void Break(bool value)
+        set
         {
-#if DEBUG
-            if (value)
+            lock (locker)
             {
-                Break();
+                _showDebugInfo = value;
             }
-#endif
         }
+    }
 
-        [DebuggerStepThrough]
-        public static void Break(Func<bool> value)
-        {
+    [DebuggerStepThrough]
+    public static void Break()
+    {
 #if DEBUG
-            if (value.Invoke())
-            {
-                Break();
-            }
-#endif
+        if (System.Diagnostics.Debugger.IsAttached)
+        {
+            System.Diagnostics.Debugger.Break();
         }
+#endif
+    }
+
+    [DebuggerStepThrough]
+    public static void Break(bool value)
+    {
+#if DEBUG
+        if (value)
+        {
+            Break();
+        }
+#endif
+    }
+
+    [DebuggerStepThrough]
+    public static void Break(Func<bool> value)
+    {
+#if DEBUG
+        if (value.Invoke())
+        {
+            Break();
+        }
+#endif
     }
 }

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using TopDownShooter.Models;
+﻿using MystiickCore.Models;
 
-namespace TopDownShooter.Managers
+namespace MystiickCore.Managers
 {
     public class MessagingManager
     {

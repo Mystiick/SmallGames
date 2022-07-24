@@ -1,7 +1,6 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
-namespace TopDownShooter.ECS.Components;
+namespace MystiickCore.ECS.Components;
 
 public class TileGrid : Component
 {

@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using TopDownShooter.ECS.Components;
+
+using MystiickCore;
+using MystiickCore.ECS;
+using MystiickCore.ECS.Components;
+using MystiickCore.Services;
+
 using TopDownShooter.Intelligences;
-using TopDownShooter.Services;
 
 namespace TopDownShooter.ECS.Engines
 {
@@ -18,8 +22,8 @@ namespace TopDownShooter.ECS.Engines
         {
             base.Start();
 
-            MessagingService.Subscribe(EventType.GameEvent, Constants.GameEvent.EnemyKilled, (s, a) => { UpdateEnemyCount(); }, this.ID);
-            MessagingService.Subscribe(EventType.GameEvent, Constants.GameEvent.MapGridReset, UpdateIntelligences, this.ID);
+            MessagingService.Subscribe(EventType.GameEvent, MystiickCore.Constants.GameEvent.EnemyKilled, (s, a) => { UpdateEnemyCount(); }, this.ID);
+            MessagingService.Subscribe(EventType.GameEvent, MystiickCore.Constants.GameEvent.MapGridReset, UpdateIntelligences, this.ID);
         }
 
         public override void Update(GameTime gameTime, List<Entity> allEntities)
@@ -37,11 +41,10 @@ namespace TopDownShooter.ECS.Engines
                 {
                     intel.Implementation.PlayerEntity = ParentEntityComponentManager.PlayerEntity;
                     intel.Implementation.CurrentEntity = x;
-                    intel.Implementation.Grid = _grid;
+                    ((ShooterIntelligence)intel.Implementation).Grid = _grid;
 
                     intel.Implementation.Update(gameTime, allEntities);
                 }
-
             }
         }
 
@@ -51,14 +54,6 @@ namespace TopDownShooter.ECS.Engines
 
             var intel = entity.GetComponent<Intelligence>();
 
-            intel.Implementation = intel.EnemyType switch
-            {
-                EnemyType.None => null,
-                EnemyType.Dummy => new Intelligences.Dummy(),
-                EnemyType.Follower => new Intelligences.Follower(),
-                EnemyType.Turret => new Intelligences.Turret(),
-                _ => throw new NotImplementedException($"EnemyType of {intel.EnemyType} is not yet implemented")
-            };
 
             switch (entity.Type)
             {

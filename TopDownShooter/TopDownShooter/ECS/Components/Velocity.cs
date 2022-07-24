@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
-namespace TopDownShooter.ECS.Components
+namespace MystiickCore.ECS.Components
 {
     public class Velocity : Component
     {

@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace MystiickCore.ECS;
 
-namespace TopDownShooter.ECS
+public abstract class Component
 {
-    public abstract class Component
-    {
-        private Guid _id = Guid.NewGuid();
+    private Guid _id = Guid.NewGuid();
 
-        public Guid ID
-        {
-            get => _id;
-            private set => _id = value;
-        }
+    public Guid ID
+    {
+        get => _id;
+        private set => _id = value;
     }
 }

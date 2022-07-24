@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TopDownShooter.ECS.Components;
+using MystiickCore.ECS.Components;
 
 namespace TopDownShooter.Tests.ECS.Components
 {

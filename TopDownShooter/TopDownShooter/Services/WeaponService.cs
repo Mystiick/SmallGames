@@ -4,12 +4,13 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 
-using TopDownShooter.ECS;
+using MystiickCore.ECS;
+using MystiickCore.Managers;
+
 using TopDownShooter.ECS.Components;
 using TopDownShooter.Managers;
-using TopDownShooter.Models;
 
-namespace TopDownShooter.Services
+namespace MystiickCore.Services
 {
     public static class WeaponService
     {

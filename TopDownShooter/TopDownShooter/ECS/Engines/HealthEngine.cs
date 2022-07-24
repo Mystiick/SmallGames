@@ -1,40 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 using Microsoft.Xna.Framework;
 
-using TopDownShooter.ECS.Components;
-using TopDownShooter.Services;
+using MystiickCore.ECS.Components;
+using MystiickCore.Services;
 
-namespace TopDownShooter.ECS.Engines
+namespace MystiickCore.ECS.Engines;
+
+public class HealthEngine : Engine
 {
-    public class HealthEngine : Engine
+    public override Type[] RequiredComponents => new[] { typeof(Health) };
+
+    public override void Update(GameTime gameTime, List<Entity> allEntities)
     {
-        public override Type[] RequiredComponents => new[] { typeof(Health) };
+        base.Update(gameTime, allEntities);
 
-        public override void Update(GameTime gameTime, List<Entity> allEntities)
+        for (int i = 0; i < this.Entities.Count; i++)
         {
-            base.Update(gameTime, allEntities);
+            var e = this.Entities[i];
+            var h = e.GetComponent<Health>();
 
-            for (int i = 0; i < this.Entities.Count; i++)
+            if (h.CurrentHealth <= 0)
             {
-                var e = this.Entities[i];
-                var h = e.GetComponent<Health>();
+                e.Expired = true;
 
-                if (h.CurrentHealth <= 0)
+                switch (e.Type)
                 {
-                    e.Expired = true;
-
-                    switch (e.Type)
-                    {
-                        case EntityType.Enemy:
-                            MessagingService.SendMessage(EventType.GameEvent, Constants.GameEvent.EnemyKilled, e);
-                            break;
-                        case EntityType.Player:
-                            MessagingService.SendMessage(EventType.GameEvent, Constants.GameEvent.PlayerKilled, e);
-                            break;
-                    }
+                    case EntityType.Enemy:
+                        MessagingService.SendMessage(EventType.GameEvent, Constants.GameEvent.EnemyKilled, e);
+                        break;
+                    case EntityType.Player:
+                        MessagingService.SendMessage(EventType.GameEvent, Constants.GameEvent.PlayerKilled, e);
+                        break;
                 }
             }
         }
