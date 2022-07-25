@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TopDownShooter.ECS;
-using TopDownShooter.ECS.Components;
-using TopDownShooter.ECS.Engines;
-using TopDownShooter.Managers;
+﻿using MystiickCore.ECS;
+using MystiickCore.Managers;
 
-namespace TopDownShooter.Tests
+namespace MystiickCore.Tests;
+
+public static class TestHelper
 {
-    public static class TestHelper
+    public static void AddEngines(EntityComponentManager unit, params Engine[] engines)
     {
-        public static void AddEngines(EntityComponentManager unit, params Engine[] engines)
+        for (int i = 0; i < engines.Length; i++)
         {
-            for (int i = 0; i < engines.Length; i++)
-            {
-                unit.AddEngine(engines[i], i);
-            }
+            unit.AddEngine(engines[i], i);
         }
-
     }
+
 }

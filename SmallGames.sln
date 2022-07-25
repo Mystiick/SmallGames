@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TopDownShooter", "TopDownSh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TopDownShooter.Tests", "TopDownShooter\TopDownShooter.Tests\TopDownShooter.Tests.csproj", "{7DBDC354-9699-4E7A-969B-9A07C31E3E92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MystiickCore.Tests", "MystiickCore.Tests\MystiickCore.Tests.csproj", "{327960A3-0123-4C6E-9194-9EA3EEDF5F53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MystiickCore.Tests", "MystiickCore.Tests\MystiickCore.Tests.csproj", "{327960A3-0123-4C6E-9194-9EA3EEDF5F53}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D0F0C9D5-FC7A-4661-8FAF-FB744FB6B893}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7DBDC354-9699-4E7A-969B-9A07C31E3E92} = {D0F0C9D5-FC7A-4661-8FAF-FB744FB6B893}
+		{327960A3-0123-4C6E-9194-9EA3EEDF5F53} = {D0F0C9D5-FC7A-4661-8FAF-FB744FB6B893}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {76AA2101-CAEF-4FD5-A575-B2E11246FFD7}

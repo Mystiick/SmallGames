@@ -8,7 +8,7 @@ using MystiickCore.ECS;
 using MystiickCore.ECS.Components;
 using MystiickCore.Exceptions;
 
-namespace TopDownShooter.Tests.ECS
+namespace MystiickCore.Tests.ECS
 {
     [TestClass]
     public class EntityTests
