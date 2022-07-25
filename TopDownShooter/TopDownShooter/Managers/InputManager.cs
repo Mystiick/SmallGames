@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using TopDownShooter.Interfaces;
+
+using MystiickCore;
+using MystiickCore.Interfaces;
+
 
 namespace TopDownShooter.Managers
 {
@@ -12,10 +15,10 @@ namespace TopDownShooter.Managers
         private KeyboardState keyboard;
         private MouseState mouse;
 
-        Dictionary<KeyBinding, MouseAndKeys> bindings;
+        Dictionary<string, MouseAndKeys> bindings;
         public InputManager()
         {
-            bindings = new Dictionary<KeyBinding, MouseAndKeys>
+            bindings = new Dictionary<string, MouseAndKeys>
             {
                 { KeyBinding.MoveUp, MouseAndKeys.W },
                 { KeyBinding.MoveDown, MouseAndKeys.S },
@@ -31,7 +34,7 @@ namespace TopDownShooter.Managers
             };
         }
 
-        public bool IsKeyDown(KeyBinding key)
+        public bool IsKeyDown(string key)
         {
             return (bindings[key]) switch
             {

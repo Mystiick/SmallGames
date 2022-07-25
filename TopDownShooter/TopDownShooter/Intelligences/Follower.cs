@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 
-using TopDownShooter.ECS;
-using TopDownShooter.ECS.Components;
-using TopDownShooter.ECS.Components.Templates;
-using TopDownShooter.ECS.Engines;
-using TopDownShooter.Managers;
-using TopDownShooter.Services;
+using MystiickCore;
+using MystiickCore.ECS;
+using MystiickCore.ECS.Components;
+using MystiickCore.ECS.Engines;
 
 namespace TopDownShooter.Intelligences
 {
-    public class Follower : BaseIntelligence
+    public class Follower : ShooterIntelligence
     {
 
         Queue<Tile> pathToPlayer;

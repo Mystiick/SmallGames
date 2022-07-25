@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using TopDownShooter.ECS;
-using TopDownShooter.ECS.Components;
+
+using MystiickCore.ECS;
 
 namespace TopDownShooter.Intelligences
 {
-    public class Dummy : BaseIntelligence
+    public class Dummy : ShooterIntelligence
     {
         public override void Update(GameTime gameTime, List<Entity> allEntities)
         {

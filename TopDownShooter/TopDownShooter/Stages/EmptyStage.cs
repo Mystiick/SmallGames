@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MystiickCore.Models;
 
-namespace TopDownShooter.Stages
+namespace TopDownShooter.Stages;
+
+public class EmptyStage : BaseStage
 {
-    public class EmptyStage : BaseStage
-    {
-    }
 }

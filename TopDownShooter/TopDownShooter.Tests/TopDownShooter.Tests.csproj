@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <!--Required for Sonar-->
-    <ProjectGuid>{7DBDC354-9699-4E7A-969B-9A07C31E3E92}</ProjectGuid>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

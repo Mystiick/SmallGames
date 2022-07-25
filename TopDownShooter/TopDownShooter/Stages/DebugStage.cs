@@ -3,10 +3,14 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using TopDownShooter.ECS;
-using TopDownShooter.ECS.Components;
+using MystiickCore;
+using MystiickCore.ECS;
+using MystiickCore.ECS.Components;
+using MystiickCore.Managers;
+using MystiickCore.Models;
+using MystiickCore.Services;
+
 using TopDownShooter.Managers;
-using TopDownShooter.Services;
 
 namespace TopDownShooter.Stages
 {
@@ -25,7 +29,7 @@ namespace TopDownShooter.Stages
         public override void LoadContent(ContentCacheManager contentManager)
         {
             base.LoadContent(contentManager);
-            ContentCache.LoadTileset(AssetName.Tileset);
+            ContentCache.LoadTileset(AssetName.Tileset, Constants.SpriteAtlas);
 
             _player.SetSprite(ContentCache.GetClippedAsset(AssetName.Character_Brown_Idle));
         }
@@ -46,8 +50,6 @@ namespace TopDownShooter.Stages
             var playerSpawn = this._map.ObjectLayers.First(x => x.Name == "Triggers").Objects.First(x => x.Name == "PlayerSpawn");
 
             _player.PlayerEntity.Transform.Position = playerSpawn.Position;
-
-
 
 
             var enemy = new Entity(new Component[] {

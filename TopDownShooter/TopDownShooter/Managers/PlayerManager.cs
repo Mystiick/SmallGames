@@ -6,11 +6,14 @@ using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
 
-using TopDownShooter.ECS;
+using MystiickCore;
+using MystiickCore.ECS;
+using MystiickCore.ECS.Components;
+using MystiickCore.Services;
+using MystiickCore.Managers;
+using MystiickCore.Interfaces;
+
 using TopDownShooter.ECS.Components;
-using TopDownShooter.Interfaces;
-using TopDownShooter.Managers;
-using TopDownShooter.Services;
 
 namespace TopDownShooter.Managers
 {
