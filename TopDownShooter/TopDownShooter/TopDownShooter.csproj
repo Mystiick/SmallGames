@@ -84,11 +84,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-    <Folder Include="Models\" />
-    <Folder Include="Exceptions\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>
