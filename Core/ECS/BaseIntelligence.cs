@@ -35,7 +35,7 @@ public abstract class BaseIntelligence
     protected bool CanSeePlayer(List<Entity> allEntities)
     {
         // Shoot a ray toward the player
-        Entity[] collidedEntities = PhysicsEngine.CastAllToward(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position, allEntities);
+        Entity[] collidedEntities = Physics.CastAllToward(CurrentEntity.Transform.Position, PlayerEntity.Transform.Position, allEntities);
 
         // If there are any Wall colliders hit, the NPC cannot see the player
         foreach (Entity e in collidedEntities)

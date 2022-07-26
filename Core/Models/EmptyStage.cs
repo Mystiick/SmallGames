@@ -1,6 +1,6 @@
 ﻿using MystiickCore.Models;
 
-namespace TopDownShooter.Stages;
+namespace MystiickCore.Models;
 
 public class EmptyStage : BaseStage
 {

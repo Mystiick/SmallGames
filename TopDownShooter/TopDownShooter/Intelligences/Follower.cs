@@ -109,7 +109,7 @@ namespace TopDownShooter.Intelligences
             Vector2 sourcePosition = Helpers.DetermineTilePosition(sourceTile, Grid);
 
             // First, try casting a ray to see if we can get to the location. If the entity cannot reach it, it's probably getting hitched up on a corner and needs to use NSEW instead of all angles
-            var collidables = PhysicsEngine.CastAllToward(sourcePosition, targetPosition, this.AllEntities);
+            var collidables = Physics.CastAllToward(sourcePosition, targetPosition, this.AllEntities);
             if (collidables.Any(x => x.ID != this.CurrentEntity.ID))
             {
                 // There is something in the way, try navigating to source tile via NSEW instead of diagonally

@@ -11,7 +11,7 @@ using MystiickCore.Services;
 
 namespace MystiickCore.Managers;
 
-public abstract class EntityComponentManager
+public class EntityComponentManager
 {
 
     private readonly List<Entity> _entities;
@@ -35,6 +35,11 @@ public abstract class EntityComponentManager
     public virtual void Init()
     {
         MessagingService.Subscribe(EventType.Spawn, OnMessageReceived, _guid);
+    }
+
+    public void AddEngine(Engine item)
+    {
+        AddEngine(item, _engines.Count());
     }
 
     public void AddEngine(Engine item, int processingOrder)

@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Gui;
 
-using MystiickCore.Interfaces;
 using MystiickCore.Managers;
 using MystiickCore.Models;
 
@@ -69,7 +68,7 @@ namespace MystiickCore.Tests.Managers
             public bool ContentLoaded { get; private set; }
             public bool Updated { get; private set; }
 
-            public override void InitializeBase(SpriteBatch spriteBatch, StageManager stageManager, GuiSystem gui, IInputManager input, EntityComponentManager ecm, object[] args)
+            public override void InitializeBase(SpriteBatch spriteBatch, StageManager stageManager, GuiSystem gui, InputManager input, EntityComponentManager ecm, object[] args)
             {
                 this.Initialized = true;
             }

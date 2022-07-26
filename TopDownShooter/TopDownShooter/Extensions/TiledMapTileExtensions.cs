@@ -1,7 +1,8 @@
 using Microsoft.Xna.Framework;
+
 using MonoGame.Extended.Tiled;
 
-namespace TopDownShooter.Extensions.Tiled
+namespace TopDownShooter.Extensions
 {
     public static class TiledMapTileExtensions
     {

@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 using MystiickCore.Managers;
+
+using System.Collections.Generic;
 
 namespace MystiickCore.Tests;
 
@@ -8,20 +11,12 @@ internal class TestEntityComponentManager : EntityComponentManager
 {
 }
 
-internal class TestInputManager : Interfaces.IInputManager
+internal class TestInputManager : InputManager
 {
-    public Vector2 GetMousePosition()
-    {
-        return Vector2.Zero;
-    }
+    public TestInputManager() : base(new Dictionary<string, MouseAndKeys>()) { }
 
-    public bool IsKeyDown(string key)
-    {
-        return true;
-    }
-
-    public void Update(GameTime gameTime)
-    {
-
-    }
+    public Vector2 GetMousePosition() => Vector2.Zero;
+    public bool IsKeyDown(string key) => true;
+    public void Update(GameTime gameTime) { }
+    public bool DirectIsKeyDown(Keys key) => true;
 }

@@ -19,7 +19,7 @@ using TopDownShooter.ECS.Components;
 using TopDownShooter.ECS.Components.Templates;
 using TopDownShooter.ECS.Engines;
 using TopDownShooter.Managers;
-using TopDownShooter.Extensions.Tiled;
+using TopDownShooter.Extensions;
 
 namespace TopDownShooter.Stages;
 

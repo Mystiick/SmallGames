@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Gui;
 
-using MystiickCore.Interfaces;
 using MystiickCore.Managers;
 using MystiickCore.Services;
 
@@ -20,7 +19,7 @@ public abstract class BaseStage : IDisposable
     protected StageManager StageManager;
     protected GuiSystem UserInterface;
     protected EntityComponentManager EntityComponentManager;
-    protected IInputManager InputManager;
+    protected InputManager InputManager;
 
     public OrthographicCamera Camera { get; protected set; }
     public readonly Guid StageID;
@@ -34,7 +33,7 @@ public abstract class BaseStage : IDisposable
         SpriteBatch spriteBatch,
         StageManager stageManager,
         GuiSystem gui,
-        IInputManager input,
+        InputManager input,
         EntityComponentManager ecm,
         object[]? args)
     {

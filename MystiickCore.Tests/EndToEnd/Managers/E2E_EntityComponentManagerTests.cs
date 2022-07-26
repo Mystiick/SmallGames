@@ -21,7 +21,6 @@ public class E2E_EntityComponentManagerTests
     // These are used in every End to End test
     EntityComponentManager ecs;
     TimeToLiveEngine ttlEngine;
-    TransformEngine velocityEngine;
     PhysicsEngine physicsEngine;
     GameTime gameTime;
 
@@ -30,11 +29,10 @@ public class E2E_EntityComponentManagerTests
     {
         ecs = new TestEntityComponentManager();
         ttlEngine = new TimeToLiveEngine();
-        velocityEngine = new TransformEngine();
         physicsEngine = new PhysicsEngine();
         gameTime = new GameTime() { ElapsedGameTime = new TimeSpan(0, 0, 1) };
 
-        TestHelper.AddEngines(ecs, ttlEngine, velocityEngine, physicsEngine);
+        TestHelper.AddEngines(ecs, ttlEngine, physicsEngine);
 
     }
 
@@ -54,7 +52,6 @@ public class E2E_EntityComponentManagerTests
         ecs.Update(gameTime);
 
         // Assert
-        Assert.AreEqual(1, velocityEngine.MyEntities.Count, "2 seconds have passed, there should be exactly one valid entity");
         Assert.AreEqual(1, ecs.MyEntities.Count, "The expired entity should not be in the ECS Manager");
         Assert.IsTrue(entity1.Expired, "2 seconds have passed, Entity1 should be expired");
         Assert.IsFalse(entity2.Expired, "Entity2 has no TTL and should not be expired");

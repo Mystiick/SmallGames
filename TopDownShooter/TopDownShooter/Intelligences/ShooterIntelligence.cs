@@ -11,6 +11,7 @@ using MystiickCore.ECS.Components;
 using MystiickCore.Services;
 
 using TopDownShooter.ECS.Components;
+using TopDownShooter.Services;
 
 namespace TopDownShooter.Intelligences
 {

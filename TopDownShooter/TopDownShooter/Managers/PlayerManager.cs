@@ -11,7 +11,6 @@ using MystiickCore.ECS;
 using MystiickCore.ECS.Components;
 using MystiickCore.Services;
 using MystiickCore.Managers;
-using MystiickCore.Interfaces;
 
 using TopDownShooter.ECS.Components;
 
@@ -19,7 +18,7 @@ namespace TopDownShooter.Managers
 {
     public class PlayerManager
     {
-        public IInputManager InputManager { get; set; }
+        public InputManager InputManager { get; set; }
         public OrthographicCamera Camera { get; set; }
 
         public Entity PlayerEntity

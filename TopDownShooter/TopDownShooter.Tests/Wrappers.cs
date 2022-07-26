@@ -1,21 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended.ViewportAdapters;
+
+using MystiickCore;
 using MystiickCore.Managers;
-using MystiickCore.Interfaces;
 
 namespace TopDownShooter.Tests;
 
-internal class InputManagerWrapper : IInputManager
+internal class InputManagerWrapper : InputManager
 {
     public Func<string, bool> MockIsKeyDown;
     public Vector2 MockGetMousePosition;
     public Action<GameTime> MockUpdate;
+
+    public InputManagerWrapper() : base(new Dictionary<string, MouseAndKeys>())
+    {
+    }
 
     public bool IsKeyDown(string key)
     {
@@ -34,15 +41,14 @@ internal class InputManagerWrapper : IInputManager
         }
     }
 
-    public Vector2 GetMousePosition()
-    {
-        return MockGetMousePosition;
-    }
+    public Vector2 GetMousePosition() => MockGetMousePosition;
 
     public void Update(GameTime gameTime)
     {
         MockUpdate?.Invoke(gameTime);
     }
+
+    public bool DirectIsKeyDown(Keys key) => true;
 }
 
 internal class ViewportAdapterWrapper : ViewportAdapter

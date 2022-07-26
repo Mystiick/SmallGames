@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Gui;
 
 using MystiickCore.Managers;
-using MystiickCore.Interfaces;
 using MystiickCore.Models;
 
 namespace MystiickCore.Managers
@@ -14,10 +13,10 @@ namespace MystiickCore.Managers
         private readonly SpriteBatch _spriteBatch;
         private readonly ContentCacheManager _contentCache;
         private readonly GuiSystem _gui;
-        private readonly IInputManager _input;
+        private readonly InputManager _input;
         private readonly EntityComponentManager _ecm;
 
-        public StageManager(SpriteBatch spriteBatch, ContentCacheManager contentManager, GuiSystem gui, IInputManager inputManager, EntityComponentManager ecm)
+        public StageManager(SpriteBatch spriteBatch, ContentCacheManager contentManager, GuiSystem gui, InputManager inputManager, EntityComponentManager ecm)
         {
             _spriteBatch = spriteBatch;
             _contentCache = contentManager;
