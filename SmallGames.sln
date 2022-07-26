@@ -13,9 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MystiickCore.Tests", "Mysti
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D0F0C9D5-FC7A-4661-8FAF-FB744FB6B893}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RolePlayingGame", "RolePlayingGame\RolePlayingGame.csproj", "{436F108E-2267-41AF-82FF-6215FB114B66}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template", "Template\Template.csproj", "{55DA7814-D92E-4BB6-BEDB-D8225117D039}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template", "Template\Template.csproj", "{55DA7814-D92E-4BB6-BEDB-D8225117D039}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,10 +37,6 @@ Global
 		{327960A3-0123-4C6E-9194-9EA3EEDF5F53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{327960A3-0123-4C6E-9194-9EA3EEDF5F53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{327960A3-0123-4C6E-9194-9EA3EEDF5F53}.Release|Any CPU.Build.0 = Release|Any CPU
-		{436F108E-2267-41AF-82FF-6215FB114B66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{436F108E-2267-41AF-82FF-6215FB114B66}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{436F108E-2267-41AF-82FF-6215FB114B66}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{436F108E-2267-41AF-82FF-6215FB114B66}.Release|Any CPU.Build.0 = Release|Any CPU
 		{55DA7814-D92E-4BB6-BEDB-D8225117D039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{55DA7814-D92E-4BB6-BEDB-D8225117D039}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55DA7814-D92E-4BB6-BEDB-D8225117D039}.Release|Any CPU.ActiveCfg = Release|Any CPU

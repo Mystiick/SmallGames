@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-
-using MonoGame.Extended.BitmapFonts;
+﻿using MonoGame.Extended.BitmapFonts;
 using MonoGame.Extended.Gui;
 using MonoGame.Extended.ViewportAdapters;
 
@@ -19,9 +17,8 @@ internal class Startup : BaseGame
         _inputManager = new InputManager(LoadKeybindings());
 
         base.Initialize();
-
+        SetupDefaultUi();
     }
-
 
     private Dictionary<string, MouseAndKeys> LoadKeybindings()
     {
@@ -35,5 +32,16 @@ internal class Startup : BaseGame
             };
     }
 
+    private void SetupDefaultUi()
+    {
+        //TODO: Probably can pull out into a UserInterfaceManager
+        var viewportAdapter = new DefaultViewportAdapter(GraphicsDevice);
+        var guiRenderer = new GuiSpriteBatchRenderer(GraphicsDevice, () => Matrix.Identity);
+        var font = Content.Load<BitmapFont>("Fonts\\KenPixel\\32\\KenPixel32");
+        BitmapFont.UseKernings = false;
+        Skin.CreateDefault(font);
+
+        _gui = new GuiSystem(viewportAdapter, guiRenderer) { ActiveScreen = new MainMenuScreen().Screen };
+    }
 
 }
